@@ -1,0 +1,128 @@
+<slide>
+  <!-- header -->
+  <header>
+    <div id="header" class="header">
+      <h1 class="tit_h">사내 교육 과정
+      </h1>
+      <div class="h_btns">
+        <!-- 상단 버튼영역 -->
+        <button type="button" v-ripple v-close class="btn_icon btn_prev">
+          <i class="ico_arrow_l"></i>
+        </button>
+        <div class="h_btns_r">
+          <button class="btn_icon btn_search" type="button" v-ripple @click="showSearch">
+            <i class="ico_search"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- //header -->
+
+  <!-- container -->
+  <div id="container" class="container">
+    <!-- content -->
+    <div class="content scroll_cont" infinite-wrapper>
+      <spinner style="width: 15%;margin: 0 auto;height: 100%;" v-if="spin"></spinner>
+      <!-- open list -->
+      <div class="open_list status_list ">
+        <ul class="list ">
+          <li v-for="(item, key) in dataList">
+            <div class="inner" v-ripple @click="openDetail($event, key, item)">
+              <div class="txt_status ">{{item.ESS_OPT_NM_2}}과정</div>
+              <div class="txt_open_list ">
+                <small class="txt_sub ">{{item.EDU_KIND_NM}}</small>
+                <strong class="tit ">{{item.COSE_NM}}</strong>
+                <ul class="list list_2 ">
+                  <li>
+                    <strong class="tit ">개설수</strong>{{item.COSE_OPEN_CNT}}</li>
+                  <li>
+                    <strong class="tit ">신청/정원</strong>{{item.APP_PERSON_CNT_SUM}}/{{item.EDU_LIMT_SU_SUM}}</li>
+                </ul>
+                <!-- badge sty01 : 오렌지색(신청가능) / 내용이 두줄이면 span으로 감싸기 -->
+                <div class="badge_r badge_sty01 " v-if="item.APP_ENABLE_YN==='0000'" v-html="'<span>신청<br />가능</span>'">
+                </div>
+                <!-- 기본(대상아님) / 내용이 두줄이면 span으로 감싸기 -->
+                <div class="badge_r" v-else-if="item.APP_ENABLE_YN==='1000'" v-html="'<span>대상<br />아님</span>'">
+                </div>
+                <!-- badge sty04 : 갈색(신청불가) / 내용이 두줄이면 span으로 감싸기 -->
+                <div class="badge_r badge_sty04" v-else-if="item.APP_ENABLE_YN==='2000'" v-html="'<span>신청<br />불가</span>'">
+                </div>
+              </div>
+            </div>
+          </li>
+          <infinite-loading @infinite="infiniteHandler" spinner="spiral" ref="infiniteLoading">
+            <span slot="no-more"></span>
+            <span slot="no-results"></span>
+          </infinite-loading>
+        </ul>
+      </div>
+      <!-- //open list -->
+    </div>
+    <!-- //content -->
+  </div>
+  <!-- 알림 없을때 화면 -->
+  <div class="emp_cont" v-if="!spin && noResult">
+    <div class="txt_view">
+      <i class="ico_nolist"></i>
+      <p class="txt">과정 목록이 없습니다.</p>
+    </div>
+  </div>
+  </div>
+  <!-- 검색 버튼 클릭시 나오는 검색영역, 붙는 클래스 : on / 이 영역이 나올때 뒤에 스크롤 안되게 해주세요. -->
+  <div class="search_wrap " :class="{on:isSearch}">
+    <!-- search_box -->
+    <div class="search_box ">
+      <ul class="list ">
+        <!-- 180821 웹에서 교육일로 검색기능이 사라져서 숨김처리 -->
+        <li v-if="false">
+          <div class="tit_list ">
+            <label for="w1 " class="tit_lb ">교육일</label>
+          </div>
+          <div class="select_group ">
+            <label class="input_group" for="w1">
+              <!-- 버튼 누르면 캘린더 나오기 -->
+              <input id="w1" class="input_text" type="date" v-model="SEARCH_STA_DATE" @change="checkDate()" />
+              <div class="btn_icon">
+                <i class="ico_calendar"></i>
+              </div>
+            </label>
+            <span class="txt">~</span>
+            <label class="input_group" for="w2">
+              <!-- 버튼 누르면 캘린더 나오기 -->
+              <input id="w2" class="input_text" type="date" v-model="SEARCH_END_DATE" @change="checkDate()" />
+              <div class="btn_icon">
+                <i class="ico_calendar"></i>
+              </div>
+            </label>
+          </div>
+        </li>
+        <li>
+          <div class="tit_list ">
+            <label for="w3 " class="tit_lb ">과정구분</label>
+          </div>
+          <div class="select_box ">
+            <select id="w3 " class="select input_full " v-model="SEARCH_EDU_MY_FIT">
+              <option value="">전체</option>
+              <option value="10">필수</option>
+              <option value="20">직무</option>
+              <option value="30">선택</option>
+            </select>
+          </div>
+        </li>
+        <li>
+          <div class="tit_list ">
+            <strong class="tit_lb ">과정명</strong>
+          </div>
+          <input type="text " v-model="SEARCH_COSE_NM" class="input_text input_full " value="과정명 " placeholder="과정명을 입력하세요. " />
+        </li>
+      </ul>
+      <button type="button" class="btn btn_sty01 btn_l btn_search_m " v-ripple @click="search">조회</button>
+    </div>
+    <!-- //write_list -->
+    <!-- 닫기 버튼 -->
+    <button type="button " class="btn_close " v-ripple @click="hideSearch()">
+      <i class="ico_x "></i>
+    </button>
+  </div>
+</slide>

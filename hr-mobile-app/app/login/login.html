@@ -1,0 +1,74 @@
+<div id="wrap" class="login_wrap" style="overflow-y:auto">
+  <!-- container -->
+  <div class="container" id="container">
+    <form @submit.prevent="loginBtnValid && login()" action>
+      <div class="inner">
+        <div class="login_cont">
+          <div class="login_logo">
+            <h1 class="logo">
+              <img src="../images/img_logo.svg" alt="홈앤서비스-SK브로드밴드">
+            </h1>
+            <p class="txt">홈앤서비스 m-HR에 오신 것을 환영합니다.</p>
+            <i class="ico_lock"></i>
+          </div>
+          <div class="form_area">
+            <ul>
+              <li>
+                <label class="blind" for="userId">
+                  <span class="blind">사번(아이디)</span>
+                </label>
+                <input oninvalid="this.setCustomValidity('사번(아이디)를 입력해 주세요.')" oninput="this.setCustomValidity('')" required class="input_text input_full"
+                  id="userId" type="text" v-model="userId" placeholder="사번(아이디)">
+              </li>
+              <li>
+                <label class="blind" for="userPw">
+                  <span class="blind">비밀번호</span>
+                </label>
+                <input oninvalid="this.setCustomValidity('비밀번호를 입력해 주세요.')" oninput="this.setCustomValidity('')" required class="input_text input_full"
+                  id="userPw" v-model="userPwd" type="password" placeholder="비밀번호">
+              </li>
+            </ul>
+            <!-- 로그인 버튼/인증번호 요청 버튼나타나는 클래스 : cer_btn -->
+            <div class="sub_btn" :class="{'cer_btn':isDeviceAuth}">
+              <button class="btn btn_sty04 btn_block btn_l btn_login" disabled v-show="!loginBtnValid" style="opacity: .7;">로그인</button>
+              <button class="btn btn_sty04 btn_block btn_l btn_login" type="submit" v-ripple v-show="loginBtnValid">로그인</button>
+              <!-- 인증번호 재요청 버튼 -->
+              <button class="btn btn_sty04 btn_block btn_l btn_cer" type="button" v-show="isDeviceAuth && !isRetrySMS">인증 번호 재요청</button>
+              <button class="btn btn_sty04 btn_block btn_l" type="button" v-show="isDeviceAuth && isRetrySMS" @click="reqDeviceAuthSMS"
+                v-ripple>인증 번호 재요청</button>
+              <div class="cer_num" v-if="isDeviceAuth">
+                <div class="cer_input">
+                  <input v-model="auth_no" :disabled="isRetrySMS" class="input_text input_full" type="number" placeholder="인증번호 입력" oninvalid="this.setCustomValidity('인증번호를 입력해 주세요.')"
+                    oninput="this.setCustomValidity('')" required>
+                  <span class="txt_time">{{timerStr}}</span>
+                </div>
+                <button class="btn btn_sty01 btn_block btn_l btn_num_cer" type="submit" v-ripple>인증</button>
+              </div>
+            </div>
+            <div class="check_login">
+              <ul>
+                <li>
+                  <label class="ct_check_item txt_label">
+                    <input class="ct_cb" type="checkbox" v-model="idSave" id="saveId">
+                    <i class="ico_check ico_check_s"></i>
+                    <span class="txt">아이디 저장</span>
+                  </label>
+                </li>
+                <li class="tr">
+                  <a class="btn btn_txt" href="javascript:" @click="openPwReset">비밀번호 초기화</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="footer" id="footer">
+      <p class="txt">
+        <span v-if="isDeviceAuth" class="uuid_txt">기기번호 : {{getUUID}}</span>
+        <span v-else>Ver.{{version}}</span>
+        <br>COPYRIGHT 2018 BY 홈앤서비스 M-HR CO.LTD.
+        <br>ALL RIGHTS RESERVED</p>
+    </div>
+  </div>
+</div>

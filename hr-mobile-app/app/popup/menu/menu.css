@@ -1,0 +1,26 @@
+.pop_title {
+  padding: 10px 0 0 10px;
+  text-align: left;
+}
+
+.pop_cont {
+  max-height: 70vh;
+  overflow: auto;
+}
+
+.popup.mini {
+  /* left: 10%;
+  right: 10%;
+  top: 50%;
+  transform: translateY(-50%); */
+}
+.popup_layer{
+  z-index: 10000;
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, .7);
+}
+

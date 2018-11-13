@@ -1,0 +1,25 @@
+.spinner_wrap.loading_wrap{
+  opacity: .5;
+}
+
+.spinner_wrap.loading_wrap>>>.spinner {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.spinner_wrap.fade-enter-active {
+  transition: opacity 1s
+}
+
+.spinner_wrap.fade-leave-active {
+  transition: opacity .1s
+}
+
+.spinner_wrap.fade-enter, .spinner_wrap.fade-leave-to {
+  opacity: 0 !important;
+}
+
+

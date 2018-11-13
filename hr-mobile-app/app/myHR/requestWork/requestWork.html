@@ -1,0 +1,184 @@
+<slide>
+  <!-- header -->
+  <header>
+    <div id="header" class="header">
+      <h1 class="tit_h">근태 신청</h1>
+      <div class="h_btns">
+        <!-- 상단 버튼영역 -->
+        <button type="button" v-ripple v-close class="btn_icon btn_prev">
+          <i class="ico_arrow_l"></i>
+        </button>
+        <div class="h_btns_r">
+          <button type="button" class="btn_icon btn_box" v-ripple @click="openRequestList">
+            <i class="ico_list"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- //header -->
+
+  <!-- container -->
+  <div id="container" class="container">
+    <!-- info box -->
+    <div class="txt_box info_box">
+      <div class="txt_list">
+        <span class="tit">결재자</span>
+        <ul class="name_list">
+          <li>{{APPR_EMP1.EMP_NM || ''}}</li>
+          <li>{{APPR_EMP2.EMP_NM || ''}}</li>
+        </ul>
+        <label class="btn btn_sty02 btn_xs appr_select" for="name1" v-if="pl_list_j.length > 0">변경
+          <select class="btn btn_sty02 btn_xs" v-model="APPR_EMP1" id="name1">
+            <option v-for="item in pl_list_j" :value="item">{{item.EMP_NM}}</option>
+          </select>
+        </label>
+      </div>
+      <div class="txt_date">
+        <span class="tit">신청일</span>
+        <strong class="txt">{{FORMATED_YMD}}</strong>
+      </div>
+    </div>
+    <!-- //box -->
+
+    <!-- content -->
+    <div class="content  " style="overflow: hidden;-webkit-overflow-scrolling: touch;">
+      <!-- btn content/하단 버튼 고정 컨텐츠   -->
+      <form @submit.prevent="applyWork" action="">
+        <div class="btn_cont scroll_cont">
+          <!-- app_list -->
+          <div class="app_list">
+            <ul class="list">
+              <li>
+                <div class="tit_list">
+                  <label for="w2" class="tit_lb">근태 구분</label>
+                </div>
+                <div class="select_group">
+                  <div class="select_box">
+                    <select class="select" name="TAM_CD" v-model="selectedTam" required="required" oninvalid="this.setCustomValidity('근태 구분을 선택해 주세요.')"
+                      oninput="this.setCustomValidity('')">
+                      <option :value="{}">근태 구분</option>
+                      <option :value="it" v-for="it in TAM_CODE_LIST">{{it.text}}</option>
+                      <!-- <option value="01">지각</option>
+                      <option value="02">조퇴</option>
+                      <option value="03">대휴</option>
+                      <option value="12">국내출장</option>
+                      <option value="30">교육</option>
+                      <option value="40">교육(합숙)</option>
+                      <option value="49">휴일</option>
+                      <option value="50">휴근</option>
+                      <option value="51">특휴</option>
+                      <option value="53">공가</option>
+                      <option value="56">경휴</option>
+                      <option value="59">경휴(무급)</option>
+                      <option value="58">보건</option>
+                      <option value="63">연차</option>
+                      <option value="64">반연자</option>
+                      <option value="72">결근</option>
+                      <option value="73">무단결근</option> -->
+                    </select>
+                  </div>
+                  <strong class="txt_days">(잔여일수
+                    <em class="point_col3">{{totBalanceCnt||'0'}}</em>일)</strong>
+                </div>
+              </li>
+              <li>
+                <div class="tit_list">
+                  <label for="w2" class="tit_lb">시작 일자</label>
+                </div>
+                <div class="input_group input_full">
+                  <!-- 버튼 누르면 캘린더 나오기 -->
+                  <input @change="checkDate()" type="date" name="STA_YMD" id="STA_YMD" v-model="STA_YMD" class="inp input_text" required="required"
+                    oninvalid="this.setCustomValidity('시작 일자를 선택해 주세요.')" oninput="this.setCustomValidity('')">
+                  <label for="STA_YMD" class="ico_calendar btn_icon"></label>
+                  <!-- <input-date title="시작 기간" class="input_text inp" placeholder="날짜선택" v-model="filter.beginDate"
+                             ref="beginDate"></input-date> -->
+                  <!-- <input id="w3" class="input_text" type="text" readonly="readonly" /> -->
+                  <!-- <button class="btn_icon" type="button">
+                  <i class="ico_calendar"></i>
+                </button> -->
+                </div>
+              </li>
+              <li v-show="!selectedTam.type || (selectedTam.type && selectedTam.type !== 'startOnly')">
+                <div class="tit_list">
+                  <label for="w3" class="tit_lb">종료 일자</label>
+                </div>
+                <div class="input_group input_full">
+                  <!-- 버튼 누르면 캘린더 나오기 -->
+                  <input type="date" name="END_YMD" id="END_YMD" v-model="END_YMD" oninvalid="this.setCustomValidity('종료 일자를 선택해 주세요.')" oninput="this.setCustomValidity('')"
+                    class="inp input_text" required="required">
+                  <label for="END_YMD" class="ico_calendar btn_icon"></label>
+                  <!-- <input-date title="종료 기간" class="input_text inp" placeholder="날짜선택"  type="text" v-model="filter.endDate" ref="endDate"/> -->
+                  <!-- <input id="w3" class="input_text" type="text" readonly="readonly" /> -->
+                  <!-- <button class="btn_icon" type="button">
+                  <i class="ico_calendar"></i>
+                </button> -->
+                </div>
+              </li>
+              <li v-show="selectedTam.resonPlaceholder">
+                <div class="tit_list">
+                  <label for="w4" class="tit_lb">비고</label>
+                  <button type="button" class="btn_txt btn_xs btn_txt_sty01 btn_refresh" v-ripple @click="REASON = null">
+                    <i class="ico_refresh"></i>내용 초기화</button>
+                </div>
+                <textarea id="w4" class="textarea" rows="3" @input="focusScroll($event)" @change="focusScroll($event)" @click="focusScroll($event)"
+                  @focus="focusScroll($event)" :placeholder="selectedTam.resonPlaceholder" name="REASON" v-model="REASON"></textarea>
+              </li>
+              <li>
+                <div class="tit_list">
+                  <strong class="tit_lb">휴가 일수 안내</strong>
+                </div>
+                <div class="tbl_row">
+                  <table class="tbl">
+                    <colgroup>
+                      <col style="width:22%;" />
+                      <col style="width:26%;" />
+                      <col style="width:26%;" />
+                      <col style="width:26%;" />
+                    </colgroup>
+                    <tbody>
+                      <tr>
+                        <th>연차</th>
+                        <td>발생
+                          <strong>{{remainingDaysAnnual.CRT_DCNT||'0'}}</strong>
+                        </td>
+                        <td>사용
+                          <strong>{{remainingDaysAnnual.USE_DCNT||'0'}}</strong>
+                        </td>
+                        <td>잔여
+                          <strong class="point_col3">{{remainingDaysAnnual.BLN_DCNT||'0'}}</strong>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>특휴</th>
+                        <td>발생
+                          <strong>{{remainingDaysSpecial.CRT_DCNT||'0'}}</strong>
+                        </td>
+                        <td>사용
+                          <strong>{{remainingDaysSpecial.USE_DCNT||'0'}}</strong>
+                        </td>
+                        <td>잔여
+                          <strong class="point_col3">{{remainingDaysSpecial.BLN_DCNT||'0'}}</strong>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="mt6"></div>
+                <em class="txt_warning b" v-for="it in noti" v-if="noti.length>0">※ {{it}}</em>
+              </li>
+            </ul>
+          </div>
+          <!-- //write_list -->
+
+        </div>
+        <!-- list btn -->
+        <div class="btm_btns">
+          <button class="btn btn_sty01" type="submit" v-ripple>신청하기</button>
+        </div>
+        <!-- //list btn -->
+      </form>
+    </div>
+    <!-- //content -->
+  </div>
+</slide>

@@ -1,0 +1,132 @@
+<slide :class="{layer_view:formTute }" style="overflow:hidden">
+  <!-- header -->
+  <header>
+    <div id="header" class="header">
+      <h1 class="tit_h" v-if="!formTute">사내 교육 신청</h1>
+      <h1 class="tit_h" v-else>사내 교육 정보</h1>
+      <div class="h_btns">
+        <!-- 상단 버튼영역 -->
+        <button type="button" v-ripple v-close class="btn_icon btn_prev">
+          <i class="ico_arrow_l"></i>
+        </button>
+        <div class="h_btns_r" v-if="!formTute">
+          <button type="button" class="btn_icon btn_box" v-ripple @click="openEduRequestList">
+            <i class="ico_list"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- //header -->
+
+  <!-- container -->
+  <div id="container" class="container" style="background-color: #f5f5f5;overflow:hidden">
+    <!-- content -->
+    <div class="content " style="background-color: #f5f5f5;overflow: hidden;-webkit-overflow-scrolling: touch;" :class="{btn_cont: !formTute && (coseInCoseData.goCancel===1 || coseInCoseData.goAppl===1)}">
+      <!-- btn content/하단 버튼 고정 컨텐츠 클래스 : btn_cont   -->
+      <div class=" scroll_cont" style="background-color: #f5f5f5;">
+        <div class="txt_box info_box" v-if="!formTute">
+          <div class="txt_list">
+            <span class="tit">결재자</span>
+            <ul class="name_list">
+              <li>{{APPR_EMP1.EMP_NM || ''}}</li>
+              <li>{{APPR_EMP2.EMP_NM || ''}}</li>
+            </ul>
+            <label class="btn btn_sty02 btn_xs appr_select" for="name1" v-if="pl_list_j.length > 0">변경
+              <select class="btn btn_sty02 btn_xs" v-model="APPR_EMP1" id="name1">
+                <option v-for="item in pl_list_j" :value="item">{{item.EMP_NM}}</option>
+              </select>
+            </label>
+          </div>
+          <div class="txt_date">
+            <span class="tit">신청일</span>
+            <strong class="txt">{{today}}</strong>
+          </div>
+        </div>
+        <!-- open list -->
+        <div class="open_list edu_list app_view" style="background-color: #f5f5f5;">
+          <ul class="list" style="background-color: #f5f5f5;">
+            <li class="open" style="background-color: #f5f5f5;">
+              <div class="inner tit_box">
+                <div class="txt_open_list">
+                  <strong class="tit">{{coseInCoseData.COSE_NM}}</strong>
+                  <ul class="list">
+                    <li>{{coseInCoseData.ESS_OPT_NM_2}} 과정 {{coseInCoseData.COSE_MARKS}}학점</li>
+                  </ul>
+                </div>
+              </div>
+              <!-- detail view -->
+              <div class="detail_view">
+                <div class="tbl_list02">
+                  <table class="tbl">
+                    <colgroup>
+                      <col style="width:28%" />
+                      <col />
+                    </colgroup>
+                    <tbody>
+                      <tr>
+                        <th>교육 종류</th>
+                        <td>{{coseInCoseData.EDU_KIND_NM}}</td>
+                      </tr>
+                      <tr>
+                        <th>교육 수준</th>
+                        <td>{{coseInCoseData.EDU_LVL_NM}}</td>
+                      </tr>
+                      <tr>
+                        <th>교육 대상</th>
+                        <td>{{coseInCoseData.EDU_TUTE}}</td>
+                      </tr>
+                      <tr>
+                        <th>평가 기준</th>
+                        <td>{{coseInCoseData.EVAL_STANDARD}}</td>
+                      </tr>
+                      <tr>
+                        <th>교육 차수</th>
+                        <td class="point_col3">{{coseInCoseData.COSE_OPEN_CHA}}</td>
+                      </tr>
+                      <tr>
+                        <th>교육 기간</th>
+                        <td>{{coseInCoseData.EDU_DATE}}</td>
+                      </tr>
+                      <tr>
+                        <th>교육 장소</th>
+                        <td>{{coseInCoseData.EDU_PLAC_FULL_NM}}</td>
+                      </tr>
+                      <tr>
+                        <th>교육 강사</th>
+                        <td>{{coseInCoseData.EDU_TEACHER_NM}}</td>
+                      </tr>
+                      <tr>
+                        <th>교육 목적</th>
+                        <td>{{coseInCoseData.EDU_OBJE}}</td>
+                      </tr>
+                      <tr>
+                        <th>교육 내용</th>
+                        <td v-html="coseInCoseData.EDU_NOTE"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="tbl_list02">
+                  <strong class="tit">사전학습 자료</strong>
+                  <download :bus="bus" :file="item" class="add_file_box" v-for="item in fileList" v-ripple>
+                    <i class="ico_file"></i>
+                    <span>{{item.FILE_NM_ORG}}</span>
+                  </download>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <!-- //open list -->
+      </div>
+      <!-- 하단고정버튼 -->
+      <div class="btm_btns" v-if="!formTute && (coseInCoseData.goCancel===1 || coseInCoseData.goAppl===1) ">
+        <button v-if="coseInCoseData.goAppl===1 " type="button" class="btn btn_sty01" v-ripple @click="saveEduCoseOpenAppl">교육신청</button>
+        <button v-else-if="coseInCoseData.goCancel===1 " type="button" class="btn btn_sty05" v-ripple @click="saveEduCoseOpenApplCancel">신청취소</button>
+      </div>
+      <!-- //하단고정버튼 -->
+    </div>
+    <!-- //content -->
+  </div>
+</slide>

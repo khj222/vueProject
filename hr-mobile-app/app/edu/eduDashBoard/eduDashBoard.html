@@ -1,0 +1,141 @@
+<slide>
+  <!-- header -->
+  <header>
+    <div id="header" class="header">
+      <h1 class="tit_h">교육 현황</h1>
+      <div class="h_btns">
+        <!-- 상단 버튼영역 -->
+        <button type="button" v-ripple v-close class="btn_icon btn_prev">
+          <i class="ico_arrow_l"></i>
+        </button>
+        <div class="h_btns_r">
+          <button type="button" class="btn_icon btn_box" v-ripple @click="openEduRequestList">
+            <i class="ico_list"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- //header -->
+
+  <!-- container -->
+  <div id="container" class="container">
+    <div class="scroll_cont">
+      <div class="sub_col_wrap my_edu">
+        <div class="graph_wrap">
+          <!-- <div class="graph">
+            <div class="line"></div>
+          </div> -->
+          <vue-circle ref="circle" :progress="0" :size="230" :reverse="false" line-cap="round" :fill="fill" empty-fill="rgba(0, 0, 0, .1)"
+            :animation-start-value="0.0" :start-angle="-Math.PI / 2" insert-mode="append" :thickness="5" :show-percent="false">
+            <div class="txt_graph">
+              <dl>
+                <dt class="tit">취득학점 달성현황</dt>
+                <dd class="txt_num" v-if=" Object.keys(dashBoardData).length > 0">{{(dashBoardData.GAINED_MARKS/dashBoardData.REQUIRED_MARKS * 100).toFixed(1) || 0}}
+                  <small>%</small>
+                </dd>
+              </dl>
+            </div>
+          </vue-circle>
+
+        </div>
+        <div class="my_info">
+          <ul class="my_info_list">
+            <li @click="openEduMyAccsPont">
+              <dl>
+                <dt class="tit">현재 취득 학점</dt>
+                <dd class="txt_num">{{dashBoardData.GAINED_MARKS || '0'}}</dd>
+              </dl>
+            </li>
+            <li>
+              <dl>
+                <dt class="tit">연간 필수 이수 학점</dt>
+                <dd class="txt_num">{{dashBoardData.REQUIRED_MARKS || '0'}}</dd>
+              </dl>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="my_edu_list">
+        <ul class="list">
+          <li>
+            <strong class="tit">나의 진행 중인 과정 [사내 교육]</strong>
+            <div class="box_view my_view">
+              <ul>
+                <li v-ripple @click="openEduRequestList()">
+                  <a href="javascript:">
+                    <span class="round_icon">
+                      <img src="../../images/ico_pen.svg" alt="" />
+                    </span>
+                    <strong class="txt">결재 / 승인 중</strong>
+                  </a>
+                </li>
+                <li v-ripple @click="openEduServList()">
+                  <a href="javascript:">
+                    <span class="round_icon">
+                      <img src="../../images/ico_graph02.svg" alt="" />
+                    </span>
+                    <strong class="txt">만족도 참여</strong>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="open_list my_list">
+              <div class="txt_my_num">현재
+                <strong>{{list.length}}건</strong>의 교육과정을 진행/예정중입니다.</div>
+              <ul class="list">
+                <li v-for="item in list" v-ripple @click="openDetail(item)">
+                  <div class="inner">
+                    <div class="txt_open_list">
+                      <strong class="tit">{{item.COSE_NM}}</strong>
+                      <ul class="list">
+                        <li>{{item.EDU_STA_DATE}} ~ {{item.EDU_END_DATE}}</li>
+                      </ul>
+                      <!-- badge sty01 : 오렌지색(진행) -->
+                      <div class="badge_r " v-bind:class="{badge_sty01: item.appointed !== true}">
+                        {{item.appointed === true?'예정':'진행'}}</div>
+                    </div>
+                  </div>
+                </li>
+                <!-- <li>
+                  <div class="inner">
+                    <div class="txt_open_list">
+                      <strong class="tit">E-HR 교육관리 시스템 사용법 교육</strong>
+                      <ul class="list">
+                        <li>2018.03.23 ~ 2018.04.20</li>
+                      </ul>
+                      
+                      <div class="badge_r">예정</div>
+                    </div>
+                  </div>
+                </li> -->
+              </ul>
+            </div>
+          </li>
+          <li>
+            <strong class="tit">신청 가능한 과정</strong>
+            <div class="num_list">
+              <ul class="list">
+                <li>
+                  <a href="javascript:" v-ripple @click="openEduCoseList('10')">나의 필수 과정
+                    <span class="badge badge_s badge_sty02">{{dashBoardData.ENABLED_ESS_EDU_CNT}}</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="javascript:" v-ripple @click="openEduCoseList('20')">나의 직무 과정
+                    <span class="badge badge_s badge_sty02">{{dashBoardData.ENABLED_JOB_EDU_CNT}}</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="javascript:" v-ripple @click="openEduCoseList('30')">선택 과정
+                    <span class="badge badge_s badge_sty02">{{dashBoardData.ENABLED_OPT_EDU_CNT}}</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</slide>

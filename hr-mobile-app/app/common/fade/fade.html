@@ -1,0 +1,5 @@
+<transition name="fade" @before-enter="beforeEnter" @before-leave="beforeLeave" @after-leave="afterLeave" @after-enter="afterEnter" appear>
+  <div id="wrap" v-show="show">
+    <slot></slot>
+  </div>
+</transition>

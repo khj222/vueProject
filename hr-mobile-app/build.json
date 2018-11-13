@@ -1,0 +1,18 @@
+{
+  "android": {
+    "debug": {
+      "keystore": "hnskeystore",
+      "storePassword": "!Qwer1234",
+      "alias": "hns",
+      "password": "!Qwer1234",
+      "keystoreType": ""
+    },
+    "release": {
+      "keystore": "hnskeystore",
+      "storePassword": "!Qwer1234",
+      "alias": "hns",
+      "password": "!Qwer1234",
+      "keystoreType": ""
+    }
+  }
+}

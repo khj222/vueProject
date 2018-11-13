@@ -1,0 +1,98 @@
+<slide style="overflow:hidden">
+  <!-- header -->
+  <header>
+    <div id="header" class="header" ref="calHeader">
+      <h1 class="tit_h">월 근태 현황</h1>
+      <div class="h_btns">
+        <!-- 상단 버튼영역 -->
+        <button type="button" class="btn_icon btn_prev" v-close v-ripple>
+          <i class="ico_arrow_l"></i>
+        </button>
+        <div class="h_btns_r">
+          <button type="button" class="btn_icon btn_box" v-ripple @click="openRequestList">
+            <i class="ico_list"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- //header -->
+
+  <!-- container -->
+  <div id="container" class="container cal_container" ref="scroll" style="overflow:hidden;height: calc(100vh - 48px);">
+
+
+    <!-- <div class="fixed_zone" v-bind:class="{ week: calop}"> -->
+    <v-touch v-bind:swipe-options="{ threshold: 0, velocity: 0.1}" v-on:pandown="onSwipeDown" v-on:swipeleft="onSwipeLeft" v-on:swiperight="onSwipeRight"
+      class="calender_area" v-bind:class="{ up: calop}">
+
+      <div class="cal_top">
+        <strong class="txt_ym" v-if="$refs.calendar">{{$refs.calendar.selectedDate ? ($refs.calendar.selectedDate) : $refs.calendar.calFirstDate|date('YYYY. MM.')}}</strong>
+        <div class="move_btns">
+          <button type="button" class="btn_prev" v-ripple @click="onPreviousCal">
+            <i class="ico_arrow_t_l"></i>
+          </button>
+          <button type="button" class="btn_next" v-ripple @click="onNextCal">
+            <i class="ico_arrow_t_r"></i>
+          </button>
+        </div>
+      </div>
+      <calendar @selectedDateChange="onSelectDate($event)" @monthChange="onMonthChange($event)" ref="calendar" v-if="" :loaded="isFirstScroll"></calendar>
+    </v-touch>
+
+    <!-- </div> -->
+    <div v-bind:class="{ week: calop}" id="calListContainer" class="content">
+      <div class="cal_tab">
+        <div class="tab">
+          <input type="radio" name="filterRadio" id="filterRadio1" value="" checked @click="filterList($event)">
+          <label v-ripple for="filterRadio1">전체</label>
+          <input type="radio" name="filterRadio" id="filterRadio2" value="Hol" @click="filterList($event)">
+          <label v-ripple for="filterRadio2">근태</label>
+          <!-- <input type="radio" name="filterRadio" id="filterRadio3" @click="filterList('Vac')">
+                  <label v-ripple for="filterRadio3">휴가휴직</label> -->
+          <input type="radio" name="filterRadio" id="filterRadio4" value="Ove" @click="filterList($event)">
+          <label v-ripple for="filterRadio4">초과근무</label>
+          <input type="radio" name="filterRadio" id="filterRadio5" value="Reg" @click="filterList($event)">
+          <label v-ripple for="filterRadio5">정상근무</label>
+        </div>
+      </div>
+      <v-touch class=" tab_cont scroll_cont" v-bind:class="{ week: calop}" style="scroll-behavior: smooth" v-on:panstart="onScrollStart"
+        v-on:panup="onPanup" v-on:pandown="onPanDown" :options="{ touchAction: 'auto' }">
+        <!-- calender_list -->
+        <div class="calender_list">
+          <div v-for="(item, index) in alldataList" class="cell_swipe" ref="cellSwipe">
+            <v-touch v-bind:swipe-options="{direction: 'right', threshold: 0, velocity: 0.1}" class="swipe_cell" ref="swipeCell" v-on:panright="onCellCloseSwipe"
+              :options="{ touchAction: 'auto' }">
+              <span :class="{selected03:item.OVT_APPL_STAT , selected01:item.TAM_NM && item.TAM_NM !== '휴일' && item.TAM_NM !== '정상'}">
+                <span>{{item.dateNum}}</span>
+                <span>{{item.dayOfWeek}}</span>
+              </span>
+              <div class="time_list" @click="restoreCell($event)">
+                <small class="txt_today" v-if="item.YMD === today">Today</small>
+                <span class="cell_subject">
+                  <strong>{{ item.TAM_NM }}</strong>
+                  <span v-if="item.APPL_STAT && item.APPL_STAT !== '900'" class="dot dot_col01"></span>
+                  <span class="txt_time" v-if="item.TAM_NM === '정상' && DEFAULT_STA_HMS">{{DEFAULT_STA_HMS}} ~ {{DEFAULT_END_HMS}}</span>
+                </span>
+                <span class="cell_subject" v-if="item.OVERWORK_STAT === true">
+                  <strong>{{calcWorkType(item)}}</strong>
+                  <span v-if="item.OVT_APPL_STAT && item.OVT_APPL_STAT !== '900'" class="dot dot_col01"></span>
+                  <span class="txt_time">{{item.OVT_STA_HMS}} ~ {{item.OVT_END_HMS}}</span>
+                </span>
+              </div>
+              <v-touch v-bind:pan-options="{ direction: 'left', threshold: 0 }" ref="moveBtn" class="cell_swipe_holder" v-on:panstart="cellStart"
+                v-on:panmove="cellMove" v-on:panend="cellEnd">:</v-touch>
+
+              <button @click="requestWork(item)" v-ripple style="position:absolute;right:-82px;" class="btn_sty02">근태</button>
+              <!-- <button @click="requestWork(item)" v-ripple style="position:absolute;right:-164px;" class="btn_sty03">휴가/휴직</button> -->
+              <button @click="requestOvertime(item)" v-ripple style="position:absolute;right:-164px;" class="btn_sty04">초과 근무</button>
+            </v-touch>
+
+          </div>
+        </div>
+      </v-touch>
+    </div>
+
+  </div>
+  <!-- //container -->
+</slide>

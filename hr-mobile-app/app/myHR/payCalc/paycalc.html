@@ -1,0 +1,190 @@
+<slide>
+  <!-- header -->
+  <header>
+    <div id="header" class="header">
+      <h1 class="tit_h">급여명세서</h1>
+      <div class="h_btns">
+        <!-- 상단 버튼영역 -->
+        <button type="button" v-ripple v-close class="btn_icon btn_prev">
+          <i class="ico_arrow_l"></i>
+        </button>
+        <div class="h_btns_r" v-if="!throughMonthList">
+          <button type="button" v-ripple class="btn_icon btn_month" @click="openMonthList">
+            <i class="ico_month"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- //header -->
+
+  <!-- container -->
+  <div id="container" class="container ">
+    <!-- pay box_스크롤 시 붙는 클래스 : up -->
+    <v-touch class="txt_box pay_box" v-bind:class="{ up: isScroll}" @click="restorePaybox()" v-bind:swipe-options="{ threshold: 0, velocity: 0.1, direction: 'down'}"
+      v-on:swipedown="restorePaybox">
+      <div class="bank_box">
+        <div class="txt_list">
+          <span class="tit">급여계좌</span>
+          <strong class="txt_name">{{bankInfo?bankInfo.EMP_BANK_NM:''}}</strong>
+          <button type="button" class="btn btn_sty02 btn_xs" v-ripple @click="openChangeAccout">변경</button>
+        </div>
+        <div class="txt_date">
+          <span class="tit">지급월</span>
+          <strong class="txt">{{getMonth(PayCalcNoList.CD_NM || '')}}</strong>
+        </div>
+      </div>
+      <!-- 스크롤에 변동되는 박스 -->
+      <div class="pay_view" @click="restorePaybox()">
+        <dl>
+          <dt class="tit_month">{{PayCalcNoList.CD_NM}}</dt>
+          <dd class="txt_pay">
+            <i class="ico_won"></i>
+            <em class="txt_money">{{dataList.pcmPayPer?dataList.pcmPayPer.REAL_AMT:'- '}}</em>원</dd>
+        </dl>
+        <p class="txt_g">귀하의 노고에 감사드립니다.</p>
+        <div class="tbl_view">
+          <table class="tbl">
+            <colgroup>
+              <col style="width:40%;" />
+              <col style="width:60%;" />
+            </colgroup>
+            <tbody>
+              <tr>
+                <th>지급 총액</th>
+                <td>{{dataList.pcmPayPer?dataList.pcmPayPer.TOT_PAY_AMT:'- '}}원</td>
+              </tr>
+              <tr>
+                <th class="point_col4">공제 총액</th>
+                <td class="point_col4">{{dataList.pcmPayPer?dataList.pcmPayPer.DDCT_AMT:'- '}}원</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </v-touch>
+    <!-- //box -->
+
+    <!-- content -->
+    <div class="content ">
+      <!-- 상단 고정 스크롤 박스 클래스 : scroll_cont -->
+      <div class="scroll_cont" @scroll="handleScroll">
+        <!-- 지급총액 리스트 -->
+        <div class="tbl_list bgw">
+          <table class="tbl">
+            <colgroup>
+              <col style="width:40%;" />
+              <col style="width:60%;" />
+            </colgroup>
+            <thead>
+              <tr>
+                <th>지급 총액</th>
+                <td>{{dataList.pcmPayPer?dataList.pcmPayPer.TOT_PAY_AMT:'-'}}</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in filteredPayList(dataList.pcmPayPerRstList, 'P')">
+                <th style="white-space: pre;">{{item.STUB_NM}}</th>
+                <td>{{item.LAST_AMT}}</td>
+              </tr>
+              <!-- <tr>
+              <th>식교비(과세)</th>
+              <td>202,325</td>
+            </tr>
+            <tr>
+              <th>초과근무수당</th>
+              <td>1,056,235</td>
+            </tr>
+            <tr>
+              <th>직책수당</th>
+              <td>223,363</td>
+            </tr>
+            <tr>
+              <th>실적급</th>
+              <td>5,362,215</td>
+            </tr>
+            <tr>
+              <th>년월차수당</th>
+              <td>323,256</td>
+            </tr> -->
+            </tbody>
+          </table>
+        </div>
+        <!-- 공제 총액 리스트 -->
+        <div class="tbl_list bgw">
+          <table class="tbl">
+            <colgroup>
+              <col style="width:40%;" />
+              <col style="width:60%;" />
+            </colgroup>
+            <thead>
+              <tr>
+                <th>공제 총액</th>
+                <td>{{dataList.pcmPayPer?dataList.pcmPayPer.DDCT_AMT:'-'}}</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in filteredPayList(dataList.pcmPayPerRstList, 'D')">
+                <th style="white-space: pre;">{{item.STUB_NM}}</th>
+                <td>{{item.LAST_AMT}}</td>
+              </tr>
+              <!-- <tr>
+              <th>소득세</th>
+              <td>568,695</td>
+            </tr>
+            <tr>
+              <th>주민세</th>
+              <td>202,325</td>
+            </tr>
+            <tr>
+              <th>국민건강보험료</th>
+              <td>156,235</td>
+            </tr>
+            <tr>
+              <th>국민연금보험료</th>
+              <td>223,363</td>
+            </tr>
+            <tr>
+              <th>고용보험료</th>
+              <td>162,215</td>
+            </tr>
+            <tr>
+              <th>노조회비</th>
+              <td>23,256</td>
+            </tr> -->
+            </tbody>
+          </table>
+        </div>
+        <!-- 급여안내  -->
+        <div class="box_view">
+          <div class="tit_box">급여 안내</div>
+          <div class="cont_box">
+            <p class="txt" style="    white-space: pre-line;">{{dataList.pcmPayPer?dataList.pcmPayPer.PCM_PAY_DAY_ETC:''}}</p>
+            <!-- <dl class="txt_list">
+            <dt>[지급]</dt>
+            <dd>실적급 항목 세분화 (Service 실적급 / Sales 실적급)</dd>
+            <dd>기타과세급여4 -OCB, 구성원 기념일 선물, 거주비 지원, </dd>
+            <dd>특별 복지수당(국가유공자), 센터 자체 포상 등 </dd>
+            <dd>기타수당1 - 장애인 특별 수당, 업무상재해 구성원 지원금</dd>
+          </dl>
+          <dl class="txt_list">
+            <dt>[공제]</dt>
+            <dd>기타공제 1 - 병가, 휴직 등 근태에 따른 급여 환수액 반영</dd>
+            <dd>기타공제 2 - 사원증 재발급 비용 공제</dd>
+            <dd>기타공제 3 - SK구성원 소액기부 캠페인 신청자 기부금 공제</dd>
+            <dd>기타공제 4 - 기타과세급여4 금액 반영</dd>
+          </dl> -->
+          </div>
+        </div>
+        <!-- 특이 사항 -->
+        <div class="box_view">
+          <div class="tit_box">특이 사항</div>
+          <div class="cont_box">
+            <p class="txt" style="white-space: pre-line;">{{dataList.pcmPayPer?dataList.pcmPayPer.ETC:''}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- //content -->
+  </div>
+</slide>

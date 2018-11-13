@@ -1,0 +1,57 @@
+<slide>
+  <!-- header -->
+  <div id="header" class="header">
+    <h1 class="tit_h">환경 설정</h1>
+    <div class="h_btns">
+      <button type="button" v-ripple class="btn_icon btn_prev" v-close>
+        <i class="ico_arrow_l"></i>
+      </button>
+    </div>
+  </div>
+  <!-- //header -->
+
+  <!-- container -->
+  <div id="container" class="container">
+    <div class="txt_box user_box">
+      <dl class="user_info">
+        <dt class="user_name tr">{{$store.state.userBasicInfo.EMP_NM}}</dt>
+        <dd class="user_num">{{$store.state.userBasicInfo.EMP_NO}}</dd>
+        <dd class="user_team">{{$store.state.userBasicInfo.ORG_NM}}</dd>
+      </dl>
+    </div>
+    <!-- content -->
+    <div class="content">
+      <div class="scroll_cont">
+        <div class="set_list">
+          <ul class="list">
+            <li>
+              <a href="javascript:" @click="openPwChange" v-ripple>
+                <strong class="tit">비밀번호 변경</strong>
+                <i class="ico_chevron_r"></i>
+              </a>
+            </li>
+            <li>
+              <strong class="tit">PUSH 알림 수신</strong>
+              <label class="cb_switch">
+                <input class="cus_cb" type="checkbox" checked="checked" v-model="pushIsEnabled" @click="pushChange()">
+                <span class="slider"></span>
+              </label>
+            </li>
+            <li>
+              <strong class="tit">버전</strong>
+              <span class="txt">최신버전 {{$store.state.versionInfo.lastVersion}}</span>
+            </li>
+            <li>
+              <a href="javascript:" @click="logout" v-ripple>
+                <strong class="tit">로그아웃</strong>
+                <i class="ico_chevron_r"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- //content -->
+  </div>
+  <!-- //container -->
+</slide>

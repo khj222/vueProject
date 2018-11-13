@@ -1,0 +1,127 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.homenservice.hns" version="1.9.0" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:gap="http://phonegap.com/ns/1.0">
+    <name>m-HR</name>
+    <description>homenservice HR mobile app</description>
+    <author email="dev@bpnr.co.kr" href="http://bpnr.co.kr">BPNR</author>
+    <content src="index.html" />
+    <access origin="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+    <preference name="KeyboardShrinksView" value="true" />
+    <preference name="BackgroundColor" value="0x00000000" />
+    <preference name="Orientation" value="portrait" />
+    <preference name="StatusBarOverlaysWebView" value="false" />
+    <preference name="StatusBarBackgroundColor" value="#ce3d53" />
+    <preference name="HeaderColor" value="#ce3d53" />
+    <preference name="fullscreen" value="false" />
+    <hook src="hooks/beforePrepare.js" type="before_prepare" />
+    <platform name="android">
+        <preference name="AndroidExtraFilesystems" value="files,files-external,documents,sdcard,cache,cache-external,assets,root" />
+        <edit-config file="AndroidManifest.xml" mode="merge" platform="android" target="/manifest/application">
+            <application android:debuggable="true" />
+        </edit-config>
+        <edit-config file="AndroidManifest.xml" mode="merge" target="/manifest/uses-sdk">
+            <uses-sdk android:minSdkVersion="19" />
+        </edit-config>
+        <edit-config file="AndroidManifest.xml" mode="merge" target="/manifest/application/activity[@android:label='@string/activity_name']">
+            <activity android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        </edit-config>
+        <resource-file src="google-services.json" target="app/google-services.json" />
+        <hook src="hooks/afterPlatformAddAndroid.js" type="after_platform_add" />
+        <allow-intent href="market:*" />
+        <splash density="port-hdpi" src="res/screen/android/default_splash.png" />
+        <splash density="port-ldpi" src="res/screen/android/default_splash.png" />
+        <splash density="port-mdpi" src="res/screen/android/default_splash.png" />
+        <splash density="port-xhdpi" src="res/screen/android/default_splash.png" />
+        <preference name="CustomURLSchemePluginClearsAndroidIntent" value="true" />
+        <preference name="AndroidPersistentFileLocation" value="Compatibility" />
+        <preference name="android-windowSoftInputMode" value="stateVisible" />
+        <preference name="android-minSdkVersion" value="19" />
+        <preference name="AndroidLaunchMode" value="singleTask" />
+        <icon src="res/icon/android/Icon-512.png" />
+        <icon src="res/icon/android/Icon-48.png" width="48" />
+        <icon src="res/icon/android/Icon-72.png" width="72" />
+        <icon src="res/icon/android/Icon-96.png" width="96" />
+        <icon src="res/icon/android/Icon-144.png" width="144" />
+        <icon src="res/icon/android/Icon-192.png" width="192" />
+        <icon src="res/icon/android/Icon-512.png" width="512" />
+    </platform>
+    <platform name="ios">
+        <preference name="iosExtraFilesystems" value="library,library-nosync,documents,documents-nosync,cache,bundle,root" />
+        <resource-file src="GoogleService-Info.plist" />
+        <splash src="res/screen/ios/Default@2x~universal~anyany.png" />
+        <preference name="DisallowOverscroll" value="true" />
+        <preference name="UIWebViewBounce" value="false" />
+        <preference name="webviewbounce" value="false" />
+        <allow-intent href="itms:*" />
+        <allow-intent href="itms-apps:*" />
+        <preference name="TopActivityIndicator" value="whiteLarge" />
+        <config-file parent="NSCameraUsageDescription" platform="ios" target="*-Info.plist">
+            <string>'홈앤서비스 m-HR'에서 '카메라'를 사용하고자 합니다. 허용하시겠습니까?</string>
+        </config-file>
+        <config-file parent="NSPhotoLibraryUsageDescription" platform="ios" target="*-Info.plist">
+            <string>'홈앤서비스 m-HR'에서 '사진'을 사용하고자 합니다. 허용하시겠습니까?</string>
+        </config-file>
+        <icon height="57" src="res/icon/ios/Icon.png" width="57" />
+        <icon height="114" src="res/icon/ios/Icon@2x.png" width="114" />
+        <icon height="40" src="res/icon/ios/Icon-40.png" width="40" />
+        <icon height="80" src="res/icon/ios/Icon-40@2x.png" width="80" />
+        <icon height="120" src="res/icon/ios/Icon-40@3x.png" width="120" />
+        <icon height="120" src="res/icon/ios/Icon-60@2x.png" width="120" />
+        <icon height="180" src="res/icon/ios/Icon-60@3x.png" width="180" />
+        <icon height="72" src="res/icon/ios/Icon-72.png" width="72" />
+        <icon height="144" src="res/icon/ios/Icon-72@2x.png" width="144" />
+        <icon height="76" src="res/icon/ios/Icon-76.png" width="76" />
+        <icon height="152" src="res/icon/ios/Icon-76@2x.png" width="152" />
+        <icon height="167" src="res/icon/ios/Icon-83.5@2x.png" width="167" />
+        <icon height="29" src="res/icon/ios/Icon-Small.png" width="29" />
+        <icon height="58" src="res/icon/ios/Icon-Small@2x.png" width="58" />
+        <icon height="87" src="res/icon/ios/Icon-Small@3x.png" width="87" />
+        <icon height="50" src="res/icon/ios/Icon-Small-50.png" width="50" />
+        <icon height="100" src="res/icon/ios/Icon-Small-50@2x.png" width="100" />
+        <icon height="40" src="res/icon/ios/NotificationIcon@2x.png" width="40" />
+        <icon height="60" src="res/icon/ios/NotificationIcon@3x.png" width="60" />
+        <icon height="20" src="res/icon/ios/NotificationIcon~ipad.png" width="20" />
+        <icon height="40" src="res/icon/ios/NotificationIcon~ipad@2x.png" width="40" />
+        <icon height="80" src="res/icon/ios/AppIcon40x40@2x.png" width="80" />
+        <icon height="88" src="res/icon/ios/AppIcon44x44@2x.png" width="88" />
+        <icon height="172" src="res/icon/ios/AppIcon86x86@2x.png" width="172" />
+        <icon height="196" src="res/icon/ios/AppIcon98x98@2x.png" width="196" />
+        <icon height="48" src="res/icon/ios/AppIcon24x24@2x.png" width="48" />
+        <icon height="55" src="res/icon/ios/AppIcon27.5x27.5@2x.png" width="55" />
+        <icon height="58" src="res/icon/ios/AppIcon29x29@2x.png" width="58" />
+        <icon height="87" src="res/icon/ios/AppIcon29x29@3x.png" width="87" />
+    </platform>
+    <preference name="SplashScreenBackgroundColor" value="#ce3d53" />
+    <preference name="AutoHideSplashScreen" value="true" />
+    <preference name="ShowSplashScreenSpinner" value="true" />
+    <plugin name="cordova-plugin-whitelist" spec="^1.3.3" />
+    <plugin name="cordova-plugin-statusbar" spec="^2.3.0" />
+    <plugin name="cordova-plugin-headercolor" spec="^1.0.0" />
+    <plugin name="cordova-plugin-splashscreen" spec="^4.1.0" />
+    <plugin name="cordova-plugin-file-transfer" spec="^1.7.0" />
+    <plugin name="cordova.plugins.diagnostic" spec="^3.7.2" />
+    <plugin name="cordova-plugin-file-opener2" spec="^2.0.19" />
+    <plugin name="cordova-plugin-keyboard" spec="^1.2.0" />
+    <plugin name="cordova-plugin-add-swift-support" spec="^1.7.2" />
+    <plugin name="cordova-android-support-gradle-release" spec="^1.4.4">
+        <variable name="ANDROID_SUPPORT_VERSION" value="27.+" />
+    </plugin>
+    <plugin name="cordova-plugin-device" spec="^2.0.2" />
+    <plugin name="cordova-plugin-cocoapod-support" spec="^1.5.0" />
+    <plugin name="cordova-plugin-inappbrowser" spec="^3.0.0" />
+    <plugin name="cordova-plugin-native-spinner" spec="^1.1.3" />
+    <plugin name="cordova-plugin-local-notification" spec="^0.9.0-beta.2" />
+    <plugin name="cordova-plugin-app-version" spec="^0.1.9" />
+    <plugin name="cordova-plugin-privacyscreen" spec="^0.4.0" />
+    <plugin name="phonegap-plugin-push" spec="^2.2.3">
+        <variable name="ANDROID_SUPPORT_V13_VERSION" value="27.+" />
+        <variable name="FCM_VERSION" value="11.6.2" />
+    </plugin>
+    <engine name="ios" spec="^4.5.5" />
+    <engine name="android" spec="^7.1.0" />
+</widget>

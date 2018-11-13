@@ -1,0 +1,63 @@
+<slide>
+  <!-- header -->
+  <header>
+    <div id="header" class="header">
+      <h1 class="tit_h">이수 학점</h1>
+      <div class="h_btns">
+        <!-- 상단 버튼영역 -->
+        <button type="button" v-ripple v-close class="btn_icon btn_prev">
+          <i class="ico_arrow_l"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+  <!-- //header -->
+
+  <!-- container -->
+
+  <div id="container" class="container">
+    <div class="txt_box">
+      <div class="select_group">
+        <div class="select_box full">
+          <select class="select" v-model="SEARCH_YYYY" @change="onYearChange()">
+            <option value="" disabled>년도 선택</option>
+            <option :value="y" v-for="y in yearList">{{y}}</option>
+
+          </select>
+        </div>
+      </div>
+    </div>
+    <!-- //box -->
+
+    <!-- content -->
+    <div class="content">
+      <div class="scroll_cont">
+        <spinner style="width: 15%;margin: 0 auto;height: 100%;" v-if="spin"></spinner>
+        <div class="box_list">
+          <ul class="list">
+            <li v-for="item in dataList">
+              <div class="inner">
+                <div class="txt_box_grade">
+                  <strong class="txt_grade">{{item.POINT}}</strong>
+                  <span class="txt">학점</span>
+                </div>
+                <div class="txt_box_list">
+                  <strong class="tit">{{item.ACCS_CLS_NM}}</strong>
+                  <span class="txt">{{item.NOTE}}</span>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!-- 알림 없을때 화면 -->
+      <div class="emp_cont" style="top: 46px;" v-if="!spin && noResult">
+        <div class="txt_view">
+          <i class="ico_nolist"></i>
+          <p class="txt">이수 학점 내역이 없습니다.</p>
+        </div>
+      </div>
+    </div>
+    <!-- //content -->
+  </div>
+</slide>

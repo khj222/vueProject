@@ -1,0 +1,3 @@
+@media only screen and (max-height: 480px) {
+  .logo { display: none; }
+}

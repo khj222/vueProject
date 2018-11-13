@@ -1,0 +1,53 @@
+<slide>
+  <!-- header -->
+  <header>
+    <div class="header" id="header">
+      <h1 class="tit_h">비밀번호 초기화</h1>
+      <div class="h_btns">
+        <!-- 상단 버튼영역 -->
+        <button class="btn_icon btn_prev" type="button" v-ripple v-close>
+          <i class="ico_arrow_l"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+  <!-- //header -->
+
+  <!-- container -->
+  <div class="container login_etc_cont" id="container">
+
+    <div class="inner">
+      <div class="login_cont">
+        <form @submit.prevent="updatePasswordInit" action class="flex_form">
+          <div class="form_area">
+
+            <p class="txt_noti">비밀번호가 주민번호 뒷자리로 초기화됩니다.</p>
+            <ul>
+              <li>
+                <label class="blind" for="userId">
+                  <span class="blind">사번(아이디)</span>
+                </label>
+                <input class="input_text input_full" required="required" oninvalid="this.setCustomValidity('사번(아이디)을 입력해 주세요.')" oninput="this.setCustomValidity('')"
+                  v-model="EMPNO" id="userId" type="text" placeholder="사번(아이디)">
+              </li>
+              <li>
+                <label class="blind" for="num">
+                  <span class="blind">주민번호 뒷자리</span>
+                </label>
+                <input class="input_text input_full" required="required" oninvalid="this.setCustomValidity('주민번호 뒷자리를 입력해 주세요.')" oninput="this.setCustomValidity('')"
+                  v-model="JUNINNUM" id="num" type="password" placeholder="주민번호 뒷자리">
+              </li>
+            </ul>
+            <div class="sub_btn btns">
+              <button class="btn btn_sty04 btn_block btn_l" type="button" v-ripple v-close>취소</button>
+              <button class="btn btn_sty05 btn_block btn_l" type="submit" v-ripple>확인</button>
+            </div>
+
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+</slide>

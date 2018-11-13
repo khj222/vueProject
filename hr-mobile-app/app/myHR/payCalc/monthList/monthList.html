@@ -1,0 +1,75 @@
+<slide>
+  <!-- header -->
+  <header>
+    <div id="header" class="header">
+      <h1 class="tit_h">월별 급여 현황</h1>
+      <div class="h_btns">
+        <!-- 상단 버튼영역 -->
+        <button type="button" v-ripple v-close class="btn_icon btn_prev">
+          <i class="ico_arrow_l"></i>
+        </button>
+        <div class="h_btns_r" v-if="!throughPaycalc">
+          <button type="button" v-ripple class="btn_icon btn_statement" @click="openPayCalc">
+            <i class="ico_statement"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- //header -->
+
+  <!-- container -->
+
+  <div id="container" class="container">
+    <div class="txt_box">
+      <div class="select_group">
+        <div class="select_box ">
+          <select class="select" v-model="SEARCH_YYYY" @change="onYearChange()">
+            <option value="" disabled>년도 선택</option>
+            <option :value="y" v-for="y in yearList">{{y}}</option>
+
+          </select>
+        </div>
+        <div class="select_box">
+          <select class="select" @change="openPayDetail()" v-model="SELECTED_CD">
+            <option value="" disabled selected>급여월/유형 선택</option>
+            <option v-for="item in PayCalcNoList" :value="item">{{item.CD_NM}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <!-- //box -->
+
+    <!-- content -->
+    <div class="content">
+      <div class="scroll_cont">
+        <spinner style="width: 15%;margin: 0 auto;height: 100%;" v-if="spin"></spinner>
+        <div class="paystub_list">
+          <ul class="list">
+            <li v-for="item in PayCalcNoList">
+              <div class="inner" v-ripple @click="openPayDetail(item)">
+                <div class="txt_date">
+                  <strong class="txt_day">{{item.ORG_YM.substr(4,2)}}</strong>
+                  <span class="txt">{{item.ORG_YM.substr(0,4)}}</span>
+                </div>
+                <div class="txt_pay">
+                  <strong class="tit" v-if="item.PAY_TYPE === 'ANNUAL'">정기</strong>
+                  <strong class="tit" v-else>상여</strong>
+                  <span class="txt">{{item.REAL_AMT}}</span>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!-- 알림 없을때 화면 -->
+      <div class="emp_cont" style="top: 46px;" v-if="!spin && noResult">
+        <div class="txt_view">
+          <i class="ico_nolist"></i>
+          <p class="txt">월별 급여 내역이 없습니다.</p>
+        </div>
+      </div>
+    </div>
+    <!-- //content -->
+  </div>
+</slide>

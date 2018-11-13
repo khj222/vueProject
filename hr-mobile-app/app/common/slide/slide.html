@@ -1,0 +1,5 @@
+<transition mode="in-out" name="slide" @before-enter="beforeEnter" @before-leave="beforeLeave" @after-leave="afterLeave" @after-enter="afterEnter" appear>
+  <div id="wrap" v-show="show" :class="{prepare:!beforeTransitionMethodEnd}">
+    <slot></slot>
+  </div>
+</transition>

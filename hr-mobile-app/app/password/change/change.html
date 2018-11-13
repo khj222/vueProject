@@ -1,0 +1,59 @@
+<slide class="login_wrap">
+  <!-- header -->
+  <header>
+    <div class="header" id="header">
+      <h1 class="tit_h">비밀번호 변경</h1>
+      <div class="h_btns">
+        <!-- 상단 버튼영역 -->
+        <button class="btn_icon btn_prev" type="button" v-ripple v-close>
+          <i class="ico_arrow_l"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+  <!-- //header -->
+
+  <!-- container -->
+  <div class="container login_etc_cont" id="container">
+    <div class="inner">
+      <div class="login_cont">
+        <form @submit.prevent="updatePassword" action>
+          <div class="form_area">
+            <p class="txt_noti">비밀번호는 영문/숫자/특수문자 포함
+              <br>8자리 이상 12자리 이하 입니다.</p>
+            <ul>
+              <li>
+                <label class="blind" for="prePw">
+                  <span class="blind">기존 비밀번호</span>
+                </label>
+                <input v-model="OLDPSWD" required="required" oninvalid="this.setCustomValidity('기존 비밀번호를 입력해 주세요.')" oninput="this.setCustomValidity('')"
+                  class="input_text input_full" id="userId" type="password" placeholder="기존 비밀번호">
+              </li>
+              <li>
+                <label class="blind" for="changePw">
+                  <span class="blind">신규 비밀번호</span>
+                </label>
+                <input v-model="NEWPSWD" required="required" oninvalid="this.setCustomValidity('신규 비밀번호를 입력해 주세요.')" oninput="this.setCustomValidity('')"
+                  class="input_text input_full" id="changePw" type="password" placeholder="신규 비밀번호">
+              </li>
+              <li>
+                <label class="blind" for="changePw2">
+                  <span class="blind">비밀번호 확인</span>
+                </label>
+                <input v-model="NEWPSWDCONF" required="required" oninvalid="this.setCustomValidity('비밀번호 확인을 입력해 주세요.')" oninput="this.setCustomValidity('')"
+                  class="input_text input_full" id="changePw2" type="password" placeholder="비밀번호 확인">
+              </li>
+            </ul>
+            <div class="sub_btn btns">
+              <button class="btn btn_sty04 btn_block btn_l" type="button" v-ripple v-close>취소</button>
+              <button class="btn btn_sty05 btn_block btn_l" type="submit">확인</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  </div>
+
+</slide>

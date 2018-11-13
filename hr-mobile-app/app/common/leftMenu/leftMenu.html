@@ -1,0 +1,66 @@
+<div class="side_nav_wrap" id="sideNav" @click="closeMenu($event)">
+  <div class="side_nav">
+    <div class="sn_top">
+      <strong class="sn_logo">
+        <img src="../../images/img_logo.svg" alt="홈앤서비스-SK브로드밴드">
+      </strong>
+      <button class="btn_close" type="button" v-ripple @click="closeMenu">
+        <i class="ico_x"></i>
+      </button>
+    </div>
+    <div class="my_info">
+      <div class="txt_greeting">
+        <strong>{{$store.state.EMP_NM}}</strong>님 반갑습니다.</div>
+      <div class="user_menu">
+        <ul>
+          <li v-for="item in $store.state.ROLE.new">
+            <a class="btn_user_menu" href="javascript:" @click="open(item.id)" v-ripple>
+              <span class="icon">
+                <!-- <img src="../../images/ico_pen.svg" alt v-if="item.id === 'confirmList'"> -->
+                <img src="../../images/ico_clock.svg" alt v-if="item.id === 'confirmList'">
+                <img src="../../images/ico_check.svg" alt v-else-if="item.id === 'requestList'">
+                <img src="../../images/ico_alarm.svg" alt v-else-if="item.id === 'noticeList'">
+                <img src="../../images/ico_book.svg" alt v-else-if="item.id === 'eduConfirmList'">
+                <img src="../../images/ico_bag.svg" alt v-else-if="item.id === 'workConfirmList'">
+                <img src="../../images/ico_app.svg" alt v-else-if="item.id === 'eduRequestList'">
+              </span>
+              <span class="txt">{{item.title}}</span>
+              <span class="txt_num" v-if="item.id === 'confirmList'">{{$store.state.overTimePListCnt}}</span>
+              <!-- <span class="txt_num" v-else-if="item.id === 'requestList'">{{mngCnt}}</span> -->
+              <span class="txt_num" v-else-if="item.id === 'noticeList'">{{$store.state.pushListCnt}}</span>
+              <span class="txt_num" v-else-if="item.id === 'workConfirmList'">{{$store.state.workPListCnt}}</span>
+              <span class="txt_num" v-else-if="item.id === 'eduConfirmList'">{{$store.state.eduPListCnt}}</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="menu_list">
+      <dl class="list_box" v-for="(item, key) in $store.state.ROLE.menu">
+        <dt class="tit">{{key}}</dt>
+        <dd class="list_cont">
+          <ul>
+            <li v-for="it in item" v-if="!it.expetMenu">
+              <a class="btn_list" v-ripple @click="open(it.id)" href="javascript:">{{it.title}}
+                <!-- <span class="badge badge_sty01 b_new"></span> -->
+              </a>
+            </li>
+          </ul>
+        </dd>
+      </dl>
+    </div>
+    <div class="side_btns">
+      <ul>
+        <li>
+          <button class="btn btn_logout" type="button" v-ripple @click="logout">로그아웃</button>
+        </li>
+        <li>
+          <button class="btn btn_pw_chg" type="button" @click="open('pwChange')" v-ripple>비밀번호 변경</button>
+        </li>
+        <li>
+          <button class="btn btn_set" type="button" @click="open('setting')" v-ripple>설정</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

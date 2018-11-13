@@ -1,0 +1,122 @@
+<slide>
+  <!-- header -->
+  <header>
+    <div id="header" class="header">
+      <h1 class="tit_h">교육 이력
+      </h1>
+      <div class="h_btns">
+        <!-- 상단 버튼영역 -->
+        <button type="button" v-ripple v-close class="btn_icon btn_prev">
+          <i class="ico_arrow_l"></i>
+        </button>
+        <div class="h_btns_r">
+          <button class="btn_icon btn_search" type="button" v-ripple @click="showSearch">
+            <i class="ico_search"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- //header -->
+
+  <!-- container -->
+  <div id="container" class="container">
+    <!-- content -->
+    <div class="content scroll_cont" infinite-wrapper>
+      <spinner style="width: 15%;margin: 0 auto;height: 100%;" v-if="spin"></spinner>
+      <!-- open list -->
+      <div class="edu_sub_list ">
+        <ul class="list ">
+          <li v-for="(item, key) in dataList">
+            <div class="inner">
+              <span class="badge badge_s badge_sty01" v-if="item.servText === '참여필요'" v-ripple @click="openServ(item)">만족도 조사 / 참여 필요</span>
+              <span class="badge badge_s badge_sty02" v-else-if="item.servText === '참여완료'">만족도 조사 / 참여 완료</span>
+              <span class="badge badge_s badge_sty04" v-else-if="item.servText === '교육 종료후 참여'">만족도 조사 / 교육 종료후 참여</span>
+              <span class="badge badge_s badge_sty05" v-else>만족도 조사 / 해당 없음</span>
+              <dl v-ripple @click="openDetail($event, key, item)">
+                <dt>{{item.COSE_NM}}</dt>
+                <dd>
+                  <strong class="tit_sub">신청 기간 : </strong>{{item.APP_STA_DATE}} ~ {{item.APP_END_DATE}}</dd>
+                <dd>
+                  <strong class="tit_sub">교육 기간 : </strong>{{item.EDU_STA_DATE}} ~ {{item.EDU_END_DATE}}</dd>
+                <dd>
+                  <strong class="tit_sub">취득 점수 : </strong>-점 </dd>
+                <dd>
+                  <strong class="tit_sub">취득 학점 : </strong>{{item.COSE_POINT || '-'}}학점 </dd>
+              </dl>
+
+              <!-- 기본(수료) -->
+              <div class="badge_r" v-if="item.FIN_YN=='Y'">
+                <span>수료</span>
+              </div>
+              <!-- badge sty01 : 오렌지색(미수료) -->
+              <div class="badge_r badge_sty01" v-else-if="item.FIN_YN=='N'">
+                <span>미수료</span>
+              </div>
+            </div>
+          </li>
+          <infinite-loading @infinite="infiniteHandler" spinner="spiral" ref="infiniteLoading">
+            <span slot="no-more"></span>
+            <span slot="no-results"></span>
+          </infinite-loading>
+        </ul>
+      </div>
+      <!-- //open list -->
+    </div>
+    <!-- //content -->
+  </div>
+  <!-- 알림 없을때 화면 -->
+  <div class="emp_cont" v-if="!spin && noResult">
+    <div class="txt_view">
+      <i class="ico_nolist"></i>
+      <p class="txt">교육 이력이 없습니다.</p>
+    </div>
+  </div>
+  </div>
+  <!-- 검색 버튼 클릭시 나오는 검색영역, 붙는 클래스 : on / 이 영역이 나올때 뒤에 스크롤 안되게 해주세요. -->
+  <div class="search_wrap " :class="{on:isSearch}">
+    <!-- search_box -->
+    <div class="search_box ">
+      <ul class="list ">
+        <li>
+          <div class="tit_list ">
+            <label for="w1 " class="tit_lb ">교육년도</label>
+          </div>
+          <div class="select_group ">
+            <label class="input_group" for="w1">
+              <select class="select tute" v-model="SEARCH_STA_YYYY">
+                <option value="" disabled>년도 선택</option>
+                <option :value="y" v-for="y in yearList">{{y}}</option>
+              </select>
+              <div class="btn_icon">
+                <i class="ico_calendar"></i>
+              </div>
+            </label>
+            <span class="txt">~</span>
+            <label class="input_group" for="w2">
+              <select class="select tute" v-model="SEARCH_END_YYYY">
+                <option value="" disabled>년도 선택</option>
+                <option :value="y" v-for="y in yearList">{{y}}</option>
+              </select>
+              <div class="btn_icon">
+                <i class="ico_calendar"></i>
+              </div>
+            </label>
+          </div>
+        </li>
+        <li>
+          <div class="tit_list ">
+            <strong class="tit_lb ">과정명</strong>
+          </div>
+          <input type="text " v-model="SEARCH_COSE_NM" class="input_text input_full " value="과정명 " placeholder="과정명을 입력하세요. " />
+        </li>
+      </ul>
+      <button type="button" class="btn btn_sty01 btn_l btn_search_m " v-ripple @click="search">조회</button>
+    </div>
+    <!-- //write_list -->
+    <!-- 닫기 버튼 -->
+    <button type="button " class="btn_close " v-ripple @click="hideSearch()">
+      <i class="ico_x "></i>
+    </button>
+  </div>
+</slide>

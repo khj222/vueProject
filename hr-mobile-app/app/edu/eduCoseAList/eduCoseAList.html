@@ -1,0 +1,183 @@
+<slide>
+  <!-- header -->
+  <header>
+    <div id="header" class="header">
+      <h1 class="tit_h">사내 교육 신청</h1>
+      <div class="h_btns">
+        <!-- 상단 버튼영역 -->
+        <button type="button" v-ripple v-close class="btn_icon btn_prev">
+          <i class="ico_arrow_l"></i>
+        </button>
+        <div class="h_btns_r">
+          <button type="button" class="btn_icon btn_box" v-ripple @click="openEduRequestList">
+            <i class="ico_list"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- //header -->
+
+  <!-- container -->
+  <div id="container" class="container">
+    <!-- content -->
+    <div class="content" style="overflow: hidden;-webkit-overflow-scrolling: touch;" :class="{btn_cont: isCompleted() && (coseInCoseData.goCancel===1 || coseInCoseData.goAppl===1)}">
+      <!-- btn content/하단 버튼 고정 컨텐츠 클래스 : btn_cont   -->
+      <div class=" scroll_cont">
+        <div class="txt_box info_box">
+          <div class="txt_list">
+            <span class="tit">결재자</span>
+            <ul class="name_list" v-if="isCompleted()">
+              <li>{{APPR_EMP1.EMP_NM || ''}}</li>
+              <li>{{APPR_EMP2.EMP_NM || ''}}</li>
+            </ul>
+            <label class="btn btn_sty02 btn_xs appr_select" for="name1" v-if="pl_list_j.length > 0">변경
+              <select class="btn btn_sty02 btn_xs" v-model="APPR_EMP1" id="name1">
+                <option v-for="item in pl_list_j" :value="item">{{item.EMP_NM}}</option>
+              </select>
+            </label>
+          </div>
+          <div class="txt_date">
+            <span class="tit">신청일</span>
+            <strong class="txt">{{today}}</strong>
+          </div>
+        </div>
+        <!-- open list -->
+        <div class="open_list edu_list app_view">
+          <ul class="list">
+            <li class="open">
+              <div class="inner tit_box">
+                <div class="txt_open_list">
+                  <ul class="list">
+                    <li>
+                      <div class="tit_list">
+                        <label for="s2" class="tit_lb">과정명</label>
+                      </div>
+                      <div class="select_box">
+                        <select id="s3" class="select" @change="coseSelect" v-model="coseData">
+                          <option :value="{}">선택</option>
+                          <option :value="item" v-for="item in dataList" v-if="item.APP_ENABLE_YN==='0000'">{{item.COSE_NM}}</option>
+                        </select>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="tit_list">
+                        <label for="s3" class="tit_lb">교육차수</label>
+                      </div>
+                      <div class="select_box">
+                        <select id="s3" class="select" @change="coseOpenSelect" v-model="coseOpenData">
+                          <option :value="{}">선택</option>
+                          <option :value="item" v-for="item in openDataList">{{item.COSE_OPEN_CHA}}</option>
+                        </select>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <!-- detail view -->
+              <div class="detail_view">
+                <div class="tbl_list02">
+                  <table class="tbl">
+                    <colgroup>
+                      <col style="width:28%" />
+                      <col />
+                    </colgroup>
+                    <tbody>
+                      <tr>
+                        <th>선택/필수</th>
+                        <td>
+                          <span v-if="isCompleted()">{{coseData.ESS_OPT_NM_2}}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>학점</th>
+                        <td>
+                          <span v-if="isCompleted()">{{coseData.POINT}}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>교육 종류</th>
+                        <td>
+                          <span v-if="isCompleted()">{{coseData.EDU_KIND_NM}}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>교육 수준</th>
+                        <td>
+                          <span v-if="isCompleted()">{{coseData.EDU_LVL_NM}}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>교육 대상</th>
+                        <td>
+                          <span v-if="isCompleted()">{{coseData.EDU_TUTE}}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>평가 기준</th>
+                        <td>
+                          <span v-if="isCompleted()">{{coseInCoseData.EVAL_STANDARD}}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>교육 차수</th>
+                        <td class="point_col3">
+                          <span v-if="isCompleted()">{{coseOpenData.COSE_OPEN_CHA}}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>교육 기간</th>
+                        <td>
+                          <span v-if="isCompleted()">{{coseOpenData.EDU_STA_DATE}} ~ {{coseOpenData.EDU_END_DATE}} {{coseOpenData.EDU_DAY}}일(총 {{coseOpenData.EDU_HOUR}}시간)</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>교육 장소</th>
+                        <td>
+                          <span v-if="isCompleted()">{{coseOpenData.EDU_PLAC_FULL_NM}}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>교육 강사</th>
+                        <td>
+                          <span v-if="isCompleted()">{{coseInCoseData.EDU_TEACHER_NM}}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>교육 목적</th>
+                        <td>
+                          <span v-if="isCompleted()">{{coseData.EDU_OBJE}}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>교육 내용</th>
+                        <td>
+                          <span v-if="isCompleted()" v-html="coseData.EDU_NOTE"></span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="tbl_list02">
+                  <strong class="tit">사전학습 자료</strong>
+                  <download :bus="bus" :file="item" class="add_file_box" v-for="item in fileList" v-ripple>
+                    <i class="ico_file"></i>
+                    <span>{{item.FILE_NM_ORG}}</span>
+                  </download>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <!-- //open list -->
+      </div>
+      <!-- 하단고정버튼 -->
+      <div class="btm_btns" v-if="isCompleted()" v-show="Object.keys(coseInCoseData).length>0  && (coseInCoseData.goCancel===1 || coseInCoseData.goAppl===1) ">
+        <button v-if="coseInCoseData.goAppl===1" type="button" class="btn btn_sty01" v-ripple @click="saveEduCoseOpenAppl">교육신청</button>
+        <button v-else-if="coseInCoseData.goCancel===1" type="button" class="btn btn_sty05" v-ripple @click="saveEduCoseOpenApplCancel">신청취소</button>
+      </div>
+      <!-- //하단고정버튼 -->
+    </div>
+    <!-- //content -->
+  </div>
+</slide>

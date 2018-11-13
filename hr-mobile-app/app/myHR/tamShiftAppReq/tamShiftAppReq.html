@@ -1,0 +1,104 @@
+<slide>
+  <!-- header -->
+  <header>
+    <div id="header" class="header">
+      <h1 class="tit_h">시차 출퇴근 신청</h1>
+      <div class="h_btns">
+        <!-- 상단 버튼영역 -->
+        <button type="button" v-ripple v-close class="btn_icon btn_prev">
+          <i class="ico_arrow_l"></i>
+        </button>
+        <div class="h_btns_r">
+          <button type="button" class="btn_icon btn_box" v-ripple @click="openRequestList">
+            <i class="ico_list"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- //header -->
+
+  <!-- container -->
+  <div id="container" class="container">
+    <!-- info box -->
+    <div class="txt_box info_box">
+      <div class="txt_list">
+        <span class="tit">결재자</span>
+        <ul class="name_list">
+          <li>{{APPR_EMP1.EMP_NM || ''}}</li>
+          <li>{{APPR_EMP2.EMP_NM || ''}}</li>
+        </ul>
+        <label class="btn btn_sty02 btn_xs appr_select" for="name1" v-if="pl_list_j.length > 0">변경
+          <select class="btn btn_sty02 btn_xs" v-model="APPR_EMP1" id="name1">
+            <option v-for="item in pl_list_j" :value="item">{{item.EMP_NM}}</option>
+          </select>
+        </label>
+      </div>
+      <div class="txt_date">
+        <span class="tit">신청일</span>
+        <strong class="txt">{{appData.CRT_YMD_HMS}}</strong>
+      </div>
+    </div>
+    <!-- //box -->
+
+    <!-- content -->
+    <div class="content  " style="overflow: hidden;-webkit-overflow-scrolling: touch;">
+      <!-- btn content/하단 버튼 고정 컨텐츠   -->
+      <form @submit.prevent="requestApply" action="">
+        <div class="btn_cont scroll_cont">
+          <!-- app_list -->
+          <div class="app_list">
+            <ul class="list">
+              <li>
+                <div class="tit_list">
+                  <label for="w2" class="tit_lb  ">근무 유형
+                    <span class="tam_shift_time">{{appData.BEF_SHIFT_NM}}</span>
+                  </label>
+                </div>
+
+                <div class="select_box ">
+                  <select class="select" name="SHIFT" v-model="SHIFT">
+                    <option :value="{}" disabled>선택</option>
+                    <option :value="it" v-for="it in appData.SHIFT" :disabled="it.CD === appData.BEF_SHIFT">{{it.CD_NM}}</option>
+                  </select>
+                </div>
+
+              </li>
+              <li>
+                <div class="tit_list">
+                  <label for="w4" class="tit_lb">시작 일자</label>
+
+                </div>
+                <div class="select_box">
+                  <select id="w3" class="select input_full" name="STA_YMD" v-model="STA_YMD">
+                    <option value="" disabled>선택</option>
+                    <option :value="it" v-for="it in appData.STA_YMD">{{it}}</option>
+                  </select>
+                </div>
+              </li>
+              <li>
+                <div class="tit_list">
+                  <label for="w4" class="tit_lb">신청 사유</label>
+                  <button type="button" class="btn_txt btn_xs btn_txt_sty01 btn_refresh" v-ripple @click="REASON = null">
+                    <i class="ico_refresh"></i>내용 초기화</button>
+                </div>
+                <textarea id="w4" class="textarea" rows="3" @input="focusScroll($event)" @change="focusScroll($event)" @click="focusScroll($event)"
+                  @focus="focusScroll($event)" :placeholder="selectedTam.resonPlaceholder" name="REQ_REASON" v-model="REQ_REASON"></textarea>
+                <div class="mt6"></div>
+                <em class="txt_warning b" v-for="it in noti" v-if="noti.length>0">※ {{it}}</em>
+              </li>
+            </ul>
+          </div>
+          <!-- //write_list -->
+
+        </div>
+        <!-- list btn -->
+        <div class="btm_btns">
+          <button class="btn btn_sty01" type="submit" v-ripple>신청하기</button>
+        </div>
+        <!-- //list btn -->
+      </form>
+    </div>
+    <!-- //content -->
+  </div>
+</slide>

@@ -1,0 +1,145 @@
+body {
+  font-family: 'NotoKR', sans-serif;
+}
+
+@font-face {
+  font-family: 'NotoKR';
+  font-style: normal;
+  font-weight: 100;
+  src: url(fonts/notokr-thin.woff) format('woff')
+}
+
+@font-face {
+  font-family: 'NotoKR';
+  font-style: normal;
+  font-weight: 400;
+  src: url(fonts/notokr-regular.woff) format('woff')
+}
+
+@font-face {
+  font-family: 'NotoKR';
+  font-style: normal;
+  font-weight: 700;
+  src: url(fonts/notokr-bold.woff) format('woff')
+}
+
+* {
+  outline: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+*:not(textarea):not(input) {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+:focus {
+  outline: none;
+}
+
+.btnS,
+.btnM,
+.btnL,
+.btnSM,
+.btnXS,
+.btn_prev,
+.btn_next {
+  position: relative;
+}
+
+/* Amchart Hidden */
+
+a[title="JavaScript charts"] {
+  visibility: hidden;
+}
+
+#wrap.fade-router-leave-active {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+}
+
+#wrap.fade-router-enter-active,
+#wrap.fade-router-leave-active {
+  transition: opacity .3s;
+}
+
+.fade-router-leave {
+  opacity: 1
+}
+
+.fade-router-leave-to {
+  opacity: 0
+}
+
+.vhidden {
+  visibility: hidden;
+}
+
+.only-fade-enter-active,
+.only-fade-leave-active {
+  transition: opacity .2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.only-fade-enter,
+.only-fade-leave-to {
+  opacity: 0;
+}
+
+.only-fade-enter-to,
+.only-fade-leave {
+  opacity: 1;
+}
+
+.tab-fade-enter-active,
+.tab-fade-leave-active {
+  transition: opacity .2s linear;
+}
+
+.tab-fade-leave-active {
+  position: absolute;
+  top: 36px;
+  width: 100%;
+  z-index: 10
+}
+
+.tab-fade-leave {
+  opacity: 1;
+}
+
+.tab-fade-leave-to {
+  opacity: 0;
+}
+
+body {
+  max-height: 100vh;
+  max-width: 100vw;
+  overflow: hidden;
+}
+
+body #container {
+  transform-style: preserve-3d;
+}
+
+/* CPU가 노는 괴현상 */
+
+body .fix_btns {
+  transform: translate3d(0, 0, 0);
+}
+
+/* 컨테이너 스크롤할시 밖에 있는데도 움직이는 괴현상 */
+
+body .slide_area .slide_list {
+  transform-style: preserve-3d;
+}

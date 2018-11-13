@@ -1,0 +1,78 @@
+$green: #008744;
+$blue: #0057e7;
+$red: #d62d20;
+$yellow: #ffa700;
+$white: #eee;
+
+.mtspinner {
+  position: relative;
+  overflow: hidden;
+}
+
+.mtspinner .loader {
+  margin: 0 auto;
+  &:before {
+    content: '';
+    display: block;
+    padding-top: 100%;
+  }
+}
+
+.mtspinner .circular {
+  animation: mtspinner-rotate 1s linear infinite;
+  height: 100%;
+  transform-origin: center center;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+.mtspinner .path {
+  stroke-dasharray: 1, 200;
+  stroke-dashoffset: 0;
+  stroke: #4987bf;
+  animation: mtspinner-dash 1s ease-in-out infinite;
+  stroke-linecap: round;
+}
+
+@keyframes mtspinner-rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes mtspinner-dash {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -35px;
+  }
+  100% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -124px;
+  }
+}
+
+@keyframes mtspinner-color {
+  100%,
+  0% {
+    stroke: $red;
+  }
+  40% {
+    stroke: $blue;
+  }
+  66% {
+    stroke: $green;
+  }
+  80%,
+  90% {
+    stroke: $yellow;
+  }
+}

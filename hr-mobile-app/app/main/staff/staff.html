@@ -1,0 +1,160 @@
+<div id="wrap" class="main_wrap" :class="{'open_menu':isOpenMenu}">
+  <!-- header -->
+  <header>
+    <div class="header" id="header">
+      <h1 class="tit_h">
+        <img src="../../images/img_logo_w.svg" alt="홈앤서비스-SK브로드밴드">
+      </h1>
+      <div class="h_btns">
+        <!-- 상단 버튼영역 -->
+        <button class="btn_icon btn_menu" type="button" v-ripple @click="openMenu">
+          <i class="ico_menu"></i>
+          <span>MY HR</span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <!-- //header -->
+  <!-- container -->
+  <div id="container" class="ov_visible container">
+    <div class="main_top">
+      <div class="inner">
+        <div class="today_view">
+          <div class="inner">
+            <span class="today">{{getToday}}</span>
+            <strong class="today_state">{{todayStatus[0]? todayStatus[0].TAM_NM: ''}}</strong>
+            <div class="today_location">
+              <i class="ico_point"></i>{{userBasicInfo.WORK_NM}}</div>
+          </div>
+        </div>
+        <div class="user_info">
+          <div class="inner">
+            <div class="user_photo">
+              <img src :src="imgSrc">
+            </div>
+            <div class="user_info_list">
+              <p class="txt_greeting">안녕하세요!</p>
+              <ul>
+                <li class="user_name">
+                  <strong class="txt_name">{{userBasicInfo.EMP_NM}}님</strong>
+                </li>
+                <li class="user_team">
+                  <span class="main_user_team">{{userBasicInfo.ORG_NM}}</span>
+                </li>
+                <li class="user_position">{{userBasicInfo.DUTY_EXPL_NM}}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="main_box">
+        <div class="main_tab">
+          <ul>
+            <li>
+              <a class="on" href="#tab1">MY HR</a>
+            </li>
+            <li>
+              <a href="#tab2">교육</a>
+            </li>
+            <li>
+              <a href="#tab3">설문</a>
+            </li>
+          </ul>
+        </div>
+        <swiper :options="quickmenuswiperOption" ref="quickmenuSwiper">
+          <swiper-slide class="quickmenu-swiper-item" v-for="(menuItem, key) in $store.state.ROLE.menu" v-if="$store.state.ROLE.menu">
+            <div id="tab3" class="main_tab_cont" v-if="key === '설문'">
+              <div class="main_survey_container">
+                <div class="emp_cont" v-if="survList.length===0">
+                  <div class="txt_view">
+                    <i class="ico_nolist"></i>
+                    <p class="txt">응답하실 설문 내역이 없습니다.</p>
+                  </div>
+                </div>
+                <ul class="list_txt" v-else>
+                  <li v-for="item in survList" v-ripple @click="openInAppBrowser(item)" style="position: relative;" v-if="!isCompleted(item)">
+                    <a href="javascript:void(0)">{{item.TITLE}}</a>
+                    <span class="txt_date">~ {{formatSurvDate(item.END_DT)}}</span>
+                  </li>
+                </ul>
+              </div>
+              <div class="tab_btm" v-if="checkMenu(key,'survey')">
+                <a href="javascript:void(0)" v-ripple @click="open('survey')" class="btn btn_more">설문 조사 더 보기
+                  <span class="point_col3">+</span>
+                </a>
+              </div>
+            </div>
+            <div class="main_tab_cont" v-else>
+              <ul class="list">
+                <li v-for="mu in orderMenu(menuItem)" v-if="checkMenu(key,mu.id)">
+                  <a v-ripple @click="open(mu.id)" href="javascript:">
+                    <img src="../../images/ico_bag.svg" v-if="mu.id === 'workConfirmList'" />
+                    <img src="../../images/ico_clock.svg" v-else-if="mu.id === 'confirmList'">
+                    <img src="../../images/ico_book.svg" v-else-if="mu.id === 'eduConfirmList'">
+
+                    <img src="../../images/ico_clock.svg" v-else-if="mu.id === 'requestOvertime'">
+                    <img src="../../images/ico_bag.svg" v-else-if="mu.id === 'requestWork'">
+                    <img src="../../images/ico_doc.svg" v-else-if="mu.id === 'payCalc'">
+                    <img src="../../images/ico_check.svg" v-else-if="mu.id === 'requestList'">
+                    <img src="../../images/ico_cal.svg" v-else-if="mu.id === 'vCalender'">
+                    <img src="../../images/ico_graph.svg" v-else-if="mu.id === 'monthList'">
+
+                    <img src="../../images/ico_edu.svg" v-else-if="mu.id === 'eduDashBoard'" />
+                    <img src="../../images/ico_letter.svg" v-else-if="mu.id === 'eduCoseAList'" />
+                    <img src="../../images/ico_book.svg" v-else-if="mu.id === 'eduCoseList'" />
+                    <img src="../../images/ico_edu_list.svg" v-else-if="mu.id === 'eduMyTuteList'" />
+                    <img src="../../images/ico_app.svg" v-else-if="mu.id === 'eduRequestList'" />
+                    <img src="../../images/ico_graph02.svg" v-else-if="mu.id === 'eduServList'" />
+
+                    <span class="txt">{{mu.title}}</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </swiper-slide>
+        </swiper>
+      </div>
+      <!-- 올릴때 붙는 클래스 : up -->
+      <div class="notice_view" @click="open('noticeList')" v-ripple>
+        <div class="inner">
+          <p v-if="getPushData()">
+            <span class="badge badge_sty01 b_new"></span>{{$store.state.recentPush.CONTENTS.split('\n')[0]}}</p>
+          <p v-else style="padding-left: 4vw;">알림함 내역이 없습니다.</p>
+          <i class="ico_chevron_u"></i>
+        </div>
+      </div>
+    </div>
+
+
+
+  </div>
+  <!-- //container -->
+  <left-menu :open="open"></left-menu>
+  <div class="cm_wrap" v-if="isCoachMark">
+    <div class="inner">
+      <swiper class="img_view swiper-box" :options="swiperOption" ref="mySwiper">
+        <swiper-slide class="swiper-item">
+          <img src="../../images/img_coachmark01.png">
+        </swiper-slide>
+        <swiper-slide class="swiper-item">
+          <img src="../../images/img_coachmark02.png">
+        </swiper-slide>
+        <swiper-slide class="swiper-item">
+          <img src="../../images/img_coachmark03.png">
+        </swiper-slide>
+        <div class="swiper-pagination pagination" slot="pagination"></div>
+      </swiper>
+      <!-- 하단바 -->
+      <div class="btm_box">
+        <label class="ct_check_item txt_label" v-ripple style="position: relative;">
+          <input class="ct_cb" type="checkbox" v-model="setSkipCoachMark">
+          <i class="ico_check ico_check_s"></i>
+          <span class="txt">더 이상 열지 않기</span>
+        </label>
+        <button class="btn_close" type="button" v-ripple @click="closeCoachMark">닫기</button>
+      </div>
+    </div>
+  </div>
+</div>

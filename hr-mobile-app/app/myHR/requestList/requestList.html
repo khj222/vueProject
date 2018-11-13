@@ -1,0 +1,355 @@
+<slide>
+  <!-- header -->
+  <header>
+    <div id="header" class="header">
+      <h1 class="tit_h" @click="$store.state.popMenu && showBtn()" :class="{tit_btn : $store.state.popMenu}">신청함
+        <i class="ico_arrow_t_d" v-if="$store.state.popMenu"></i>
+      </h1>
+      <div class="h_btns">
+        <!-- 상단 버튼영역 -->
+        <button type="button" v-ripple v-close class="btn_icon btn_prev">
+          <i class="ico_arrow_l"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+  <!-- //header -->
+
+  <!-- container -->
+  <div id="container" class="container ">
+    <!-- box -->
+    <div class="txt_box search_date_box">
+      <div class="tit_box">
+        <div class="tit_lb">신청일 조회</div>
+      </div>
+      <div class="search_date">
+        <label class="input_group" for="w1">
+          <!-- 버튼 누르면 캘린더 나오기 -->
+          <input id="w1" class="input_text" type="date" v-model="SEARCH_STA_DATE" @change="checkDate()" />
+          <div class="btn_icon">
+            <i class="ico_calendar"></i>
+          </div>
+        </label>
+        <span class="txt">~</span>
+        <label class="input_group" for="w2">
+          <!-- 버튼 누르면 캘린더 나오기 -->
+          <input id="w2" class="input_text" type="date" v-model="SEARCH_END_DATE" @change="checkDate()" />
+          <div class="btn_icon">
+            <i class="ico_calendar"></i>
+          </div>
+        </label>
+      </div>
+
+    </div>
+    <!-- //box -->
+
+    <!-- content -->
+    <div class="content ">
+      <!-- tab -->
+      <div class="cal_tab tab tab5" style="top:80px">
+        <input id="sortMngList1" name="sortMngList" type="radio" @change="filterList()" checked="checked" value="" v-model="SEARCH_APPL_STAT">
+        <label for="sortMngList1" v-ripple>전체</label>
+        <input id="sortMngList2" name="sortMngList" type="radio" @change="filterList('200','300')" value="('200','300')" v-model="SEARCH_APPL_STAT">
+        <label for="sortMngList2" v-ripple>승인요청</label>
+        <input id="sortMngList3" name="sortMngList" type="radio" @change="filterList('100','250','350')" value="('100','250','350')"
+          v-model="SEARCH_APPL_STAT">
+        <label for="sortMngList3" v-ripple>진행중</label>
+        <input id="sortMngList4" name="sortMngList" type="radio" @change="filterList('900')" value="('900')" v-model="SEARCH_APPL_STAT">
+        <label for="sortMngList4" v-ripple>승인완료</label>
+        <input id="sortMngList5" name="sortMngList" type="radio" @change="filterList('990')" value="('990')" v-model="SEARCH_APPL_STAT">
+        <label for="sortMngList5" v-ripple>반려</label>
+      </div>
+      <!-- //tab -->
+      <!-- tab content/고정 탭 컨텐츠 -->
+
+      <div class="tab_cont scroll_cont" infinite-wrapper>
+        <spinner style="width: 15%;margin: 0 auto;height: 100%;" v-if="spin"></spinner>
+        <!-- open list -->
+        <div class="open_list status_list">
+          <ul class="list">
+            <!-- 리스트 클릭 시 열림, 붙는 클래스 : open -->
+            <li class="" v-for="(item, key) in dataList" v-bind:class="{open: selectedId === key}" v-if="checkList(item.APPL_CD)">
+              <div class="inner" v-ripple @click="showDetail($event, key, item)">
+                <!-- <div class="txt_status">{{getAPPL_NM(item.APPL_CD)}}</div> -->
+                <div class="txt_open_list">
+                  <strong class="tit">{{item.APPL_NM}}</strong>
+                  <ul class="list">
+                    <li>{{item.FORMATTED_REQ_YMD}}</li>
+                  </ul>
+                  <!-- <ul class="list">
+                    <li class="tit">
+                      <strong>{{item.APPL_NM}}</strong>
+                    </li>
+                    <li>{{item.FORMATTED_REQ_YMD}}</li>
+                  </ul> -->
+                  <!-- badge sty01 : 오렌지색(요청) -->
+                  <div class="badge_r badge_sty01" v-if="item.APPL_STAT_NM === '결재요청'">요청</div>
+                  <div class="badge_r badge_sty02" v-if="item.APPL_STAT_NM === '결재중'">결재중</div>
+                  <div class="badge_r badge_sty03" v-if="item.APPL_STAT_NM === '반려'">반려</div>
+                  <div class="badge_r " v-if="item.APPL_STAT_NM === '승인완료'">승인</div>
+                </div>
+              </div>
+              <!-- detail view/초과근무 -->
+              <div class="detail_view" v-if="item.APPL_CD === '100003'">
+                <div class="txt_box info_box">
+                  <div class="txt_list">
+                    <span class="tit">결재자</span>
+                    <ul class="name_list">
+                      <li v-for="it in detailData.resultList">{{it.APPR_EMP_NM}}</li>
+                      <!-- <li>남태영</li> -->
+                    </ul>
+                  </div>
+                  <div class="txt_date">
+                    <span class="tit">신청일</span>
+                    <strong class="txt">{{item.FORMATTED_REQ_YMD}}</strong>
+                  </div>
+                </div>
+                <div class="tbl_list02">
+                  <table class="tbl">
+                    <colgroup>
+                      <col style="width:43%" />
+                      <col />
+                    </colgroup>
+                    <tbody>
+                      <tr>
+                        <th>기준 근무 시간</th>
+                        <td>{{DEFAULT_STA_HMS}} ~ {{DEFAULT_END_HMS}}</td>
+                      </tr>
+                      <tr>
+                        <th>시작 일시</th>
+                        <td>{{detailData.STA_YMD}} {{detailData.STA_HMS}}</td>
+                      </tr>
+                      <tr>
+                        <th>종료 일시</th>
+                        <td>{{detailData.END_YMD}} {{detailData.END_HMS}}</td>
+                      </tr>
+                      <tr>
+                        <th>초과근무 제외시간</th>
+                        <td>{{detailData.EXPT_HMS}}</td>
+                      </tr>
+                      <!-- <tr>
+                        <th>근무 유형</th>
+                        <td>휴일 정상</td>
+                      </tr> -->
+                      <tr>
+                        <th>근무 내역</th>
+                        <td>{{item.REASON}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="tbl_list02">
+                  <table class="tbl">
+                    <colgroup>
+                      <col style="width:43%" />
+                      <col />1848948956
+                    </colgroup>
+                    <tbody>
+                      <tr>
+                        <th>신청 상태</th>
+                        <td>{{item.APPL_STAT_NM}}</td>
+                      </tr>
+                      <tr>
+                        <th>승인/반려일</th>
+                        <td>{{formatDate(item.APPR_YMD || item.FNL_APPR_YMD)}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <!-- detail view/근태신청서 -->
+              <div class="detail_view" v-if="item.APPL_CD === '100004'">
+                <div class="txt_box info_box">
+                  <div class="txt_list">
+                    <span class="tit">결재자</span>
+                    <ul class="name_list">
+                      <li v-for="it in detailData.resultList">{{it.APPR_EMP_NM}}</li>
+                    </ul>
+                  </div>
+                  <div class="txt_date">
+                    <span class="tit">신청일</span>
+                    <strong class="txt">{{item.FORMATTED_REQ_YMD}}</strong>
+                  </div>
+                </div>
+                <div class="tbl_list02">
+                  <table class="tbl">
+                    <colgroup>
+                      <col style="width:43%">
+                      <col>
+                    </colgroup>
+                    <tbody v-for="it in detailData.resultInfoList">
+                      <tr>
+                        <th>근태 구분</th>
+                        <td>{{it.TAM_CD_NM}}</td>
+                      </tr>
+                      <!-- <tr>
+                        <th>잔여일</th>
+                        <td>14일</td>
+                      </tr> -->
+                      <tr>
+                        <th>시작 일자</th>
+                        <td>{{formatDate(it.STA_YMD)}}</td>
+                      </tr>
+                      <tr>
+                        <th>종료 일자</th>
+                        <td>{{formatDate(it.END_YMD)}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="tbl_list02">
+                  <table class="tbl">
+                    <colgroup>
+                      <col style="width:43%">
+                      <col>
+                    </colgroup>
+                    <tbody>
+                      <tr>
+                        <th>신청 상태</th>
+                        <td>{{item.APPL_STAT_NM}}</td>
+                      </tr>
+                      <tr>
+                        <th>승인/반려일</th>
+                        <td>{{formatDate(item.APPR_YMD || item.FNL_APPR_YMD)}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <!-- detail view/시차출퇴근신청서 -->
+              <div class="detail_view" v-if="item.APPL_CD === '100021'">
+                <div class="txt_box info_box">
+                  <div class="txt_list">
+                    <span class="tit">결재자</span>
+                    <ul class="name_list">
+                      <li v-for="it in detailData.resultList">{{it.APPR_EMP_NM}}</li>
+                    </ul>
+                  </div>
+                  <div class="txt_date">
+                    <span class="tit">신청일</span>
+                    <strong class="txt">{{item.FORMATTED_REQ_YMD}}</strong>
+                  </div>
+                </div>
+                <div class="tbl_list02">
+                  <table class="tbl">
+                    <colgroup>
+                      <col style="width:43%">
+                      <col>
+                    </colgroup>
+                    <tbody>
+                      <tr>
+                        <th>근태 유형</th>
+                        <td>{{detailData.SHIFT_NM}}</td>
+                      </tr>
+                      <tr>
+                        <th>변경전 근태 유형</th>
+                        <td>{{removeText(detailData.BEF_SHIFT_NM)}}</td>
+                      </tr>
+                      <tr>
+                        <th>시작 일자</th>
+                        <td>{{formatDate(detailData.STA_YMD)}}</td>
+                      </tr>
+                      <tr>
+                        <th>신청 사유 </th>
+                        <td>{{detailData.REQ_REASON}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="tbl_list02">
+                  <table class="tbl">
+                    <colgroup>
+                      <col style="width:43%">
+                      <col>
+                    </colgroup>
+                    <tbody>
+                      <tr>
+                        <th>신청 상태</th>
+                        <td>{{item.APPL_STAT_NM}}</td>
+                      </tr>
+                      <tr>
+                        <th>승인/반려일</th>
+                        <td>{{formatDate(item.APPR_YMD || item.FNL_APPR_YMD)}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <!-- detail view/급여변경신청서 -->
+              <div class="detail_view" v-if="item.APPL_CD === '100002'">
+
+                <div class="tbl_list02" style="border-top:0">
+                  <table class="tbl">
+                    <colgroup>
+                      <col style="width:43%">
+                      <col>
+                    </colgroup>
+                    <tbody>
+                      <tr>
+                        <th>은행 구분</th>
+                        <td>{{detailData.BANK_NM}}</td>
+                      </tr>
+                      <tr>
+                        <th>계좌 번호(-제외)</th>
+                        <td>{{detailData.ACC_NO}}</td>
+                      </tr>
+                      <tr>
+                        <th>통장 사본</th>
+                        <td>
+                          <download :file="detailData" v-ripple v-cloak class="add_file_box">
+                            <i class="ico_file"></i>
+                            <span>{{detailData.FILE_NM_ORG}}</span>
+                          </download>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="tbl_list02">
+                  <table class="tbl">
+                    <colgroup>
+                      <col style="width:43%">
+                      <col>
+                    </colgroup>
+                    <tbody>
+                      <tr>
+                        <th>신청 상태</th>
+                        <td>{{item.APPL_STAT_NM}}</td>
+                      </tr>
+                      <tr>
+                        <th>승인/반려일</th>
+                        <td>{{formatDate(item.APPR_YMD || item.FNL_APPR_YMD)}}</td>
+                      </tr>
+                      <tr>
+                        <th>반려자</th>
+                        <td>{{item.RETURN_USER_INFO}}</td>
+                      </tr>
+                      <tr>
+                        <th>반려사유</th>
+                        <td>{{item.RETURN_REASON}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </li>
+            <infinite-loading @infinite="infiniteHandler" spinner="spiral" ref="infiniteLoading">
+              <span slot="no-more"></span>
+              <span slot="no-results"></span>
+            </infinite-loading>
+
+          </ul>
+        </div>
+        <!-- //open list -->
+      </div>
+      <!-- 알림 없을때 화면 -->
+      <div class="emp_cont list" v-if="!spin && noResult">
+        <div class="txt_view">
+          <i class="ico_nolist"></i>
+          <p class="txt">신청함 내역이 없습니다.</p>
+        </div>
+      </div>
+    </div>
+    <!-- //content -->
+  </div>
+</slide>

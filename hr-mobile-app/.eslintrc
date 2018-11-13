@@ -1,0 +1,15 @@
+{
+  "extends": "standard",
+  "plugins": [
+    "html"
+  ],
+  "globals": {
+    "_": true,
+    "$": true,
+    "jQuery": true,
+    "Vue": true
+  },
+  "rules": {
+    "space-before-function-paren": "off"
+  }
+}

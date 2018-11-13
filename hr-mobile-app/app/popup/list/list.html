@@ -1,0 +1,36 @@
+<fade-popup>
+  <!--<div>-->
+  <!--<b>{{title}}</b></br></br>-->
+  <!--</div>-->
+  <div class="popup mini">
+    <div class="pl_head">{{title}}</div>
+    <div class="pl_cont" style="white-space: pre-wrap;word-break: break-all;" v-html="msg"></div>
+    <div class="pl_list">
+      <label class="ct_check_item txt_label db" v-for="item in selectList">
+        <input class="ct_ra" type="radio" name="ct_ra" v-model="selectedItem" :value="item">
+        <span class="txt">{{item[showText]}}</span>
+        <i class="ico_ra"></i>
+      </label>
+      <!-- <label class="ct_check_item txt_label db">
+        <input class="ct_ra" type="radio" name="ct_ra">
+        <span class="txt">홍길동2</span>
+        <i class="ico_ra"></i>
+      </label>
+      <label class="ct_check_item txt_label db">
+        <input class="ct_ra" type="radio" name="ct_ra">
+        <span class="txt">홍길동3</span>
+        <i class="ico_ra"></i>
+      </label>
+      <label class="ct_check_item txt_label db">
+        <input class="ct_ra" type="radio" name="ct_ra">
+        <span class="txt">홍길동4</span>
+        <i class="ico_ra"></i>
+      </label> -->
+    </div>
+    <div class="pop_btns pl_btns" :class="btnList.length > 1 ? 'pb2' : ''">
+      <!-- 버튼이 두개일때 붙는 클래스 : pd2 -->
+      <button type="button" v-ripple class="btn btnL " :class="(btnList.length > 1 && $index==0) ? 'btn_sty04':'btn_sty05'" v-for="(btn,$index) of btnList"
+        @click="onBtnClick($index,btn)">{{btn.text}}</button>
+    </div>
+  </div>
+</fade-popup>

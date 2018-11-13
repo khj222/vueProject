@@ -1,0 +1,92 @@
+<fade class="layer_view " style="overflow: hidden;">
+  <div class="inner" style="overflow: hidden;">
+    <!-- header -->
+    <header>
+      <div class="header">
+        <h1 class="tit_h">직원조회</h1>
+        <div class="h_btns">
+          <!-- 상단 버튼영역 -->
+          <div class="h_btns_r">
+            <button class="btn_icon btn_close" type="button" v-ripple v-close>
+              <i class="ico_x"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+    <!-- //header -->
+    <!-- container -->
+    <div class="container" style="overflow: hidden;">
+      <div class="search_area">
+        <ul class="list">
+          <li>
+            <div class="tit_list">
+              <label class="tit_lb" for="s1">부서</label>
+            </div>
+            <input class="input_text input_full" id="s1" type="text" disabled="disabled" :value="ORG_CD_NM">
+          </li>
+          <li>
+            <div class="tit_list">
+              <label class="tit_lb" for="s2">사번 이름</label>
+            </div>
+            <input class="input_text input_full" id="s2" type="text" v-model="SEARCH_USER_NM">
+          </li>
+          <li>
+            <div class="tit_list">
+              <label class="tit_lb" for="s3">직책</label>
+            </div>
+            <div class="select_box">
+              <select class="select" id="s3" v-model="SEARCH_DUTY">
+                <option value="">전체</option>
+                <option v-for="it in PAS_DUTY_LIST" :value="it.value">{{it.text}}</option>
+                <!-- <option value="A21">CEO (A21)</option>
+                <option value="A71">실장 (A71)</option>
+                <option value="A81">본부장 (A81)</option>
+                <option value="A91">담당 (A91)</option>
+                <option value="C10">센터장 (C10)</option>
+                <option value="C11">팀장 (C11)</option>
+                <option value="C31">TF장 (C31)</option>
+                <option value="C51">PL (C51)</option>
+                <option value="D11">팀원 (D11)</option>
+                <option value="D51">수습 (D51)</option>
+                <option value="D52">수습계약 (D52)</option>
+                <option value="H10">팀원 (H10)</option>
+                <option value="H11">팀원 (H11)</option>
+                <option value="H12">팀원 (H12)</option> -->
+              </select>
+            </div>
+          </li>
+        </ul>
+        <button class="btn btn_sty01 btn_l btn_search_m" type="button" @click="search()" v-ripple>조회</button>
+      </div>
+      <div class="search_result" infinite-wrapper>
+        <spinner style="width: 15%;margin: 0 auto;height: 100%;" v-if="spin"></spinner>
+        <div class="tbl_list">
+          <table class="tbl">
+            <colgroup>
+              <col style="width:8%;">
+              <col style="width:16%;">
+              <col style="width:20%;">
+              <col style="width:20%;">
+
+            </colgroup>
+            <tbody>
+              <tr v-for="(item, key) in dataList" @click="selectMember(item)">
+                <td>{{item.RN}}</td>
+                <td>{{item.EMP_NM}}</td>
+                <td>{{item.EMP_NO}}</td>
+                <td>{{item.DUTY_NM}}</td>
+                <!-- <td>{{item.ORG_CD_NM}}</td> -->
+              </tr>
+              <infinite-loading @infinite="infiniteHandler" spinner="spiral" ref="infiniteLoading" distance="200">
+                <span slot="no-more"></span>
+                <span slot="no-results"></span>
+              </infinite-loading>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!-- //container -->
+  </div>
+</fade>

@@ -1,0 +1,21 @@
+<table class="tbl_calender">
+  <colgroup>
+    <col style="width:14.3%;" span="6" />
+    <col style="width:14.2%;" />
+  </colgroup>
+  <thead>
+    <tr>
+      <th v-for="dayName of weekDays">
+        <abbr :title="dayName">{{dayName.substring(0,3)}}</abbr>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr v-for="(week, i) of calObj" :class="{on: i+1 === calFristWeek}">
+      <td v-for="day of week" @click="onSelected(day)">
+        <a href="javascript:void(0)" v-if="day.isCurMonth" :class="{'selected02': day.date.toString() === selectedDate, today: day.date.getFullYear() === today.getFullYear() && day.date.getMonth() === today.getMonth() && day.date.getDate() === today.getDate(),  txt_red: day.isHoliday, selected03:day.OVERWORK_STAT, selected01:day.TAM_NM !== '휴일' && day.TAM_NM !== '정상' && day.TAM_NM}">{{day.date.getDate()}}</a>
+        <span v-if="!day.isCurMonth" :class="{'selected02': day.date.toString() === selectedDate}">{{day.date.getDate()}}</span>
+      </td>
+    </tr>
+  </tbody>
+</table>

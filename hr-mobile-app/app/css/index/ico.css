@@ -1,0 +1,106 @@
+@font-face {
+  font-family: 'SKIcon';
+  src: url('../../fonts/SKIcon.eot?o66ueg');
+  src: url('../../fonts/SKIcon.eot?o66ueg#iefix') format('embedded-opentype'),
+    url('../../fonts/SKIcon.ttf?o66ueg') format('truetype'),
+    url('../../fonts/SKIcon.woff?o66ueg') format('woff'),
+    url('../../fonts/SKIcon.svg?o66ueg#SKIcon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^='ico_'],
+[class*=' ico_'] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'SKIcon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  vertical-align: middle;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.ico_menu:before {
+  content: '\e914';
+}
+.ico_chevron_u:before {
+  content: '\e90d';
+}
+.ico_chevron_d:before {
+  content: '\e90e';
+}
+.ico_chevron_l:before {
+  content: '\e907';
+}
+.ico_chevron_r:before {
+  content: '\e908';
+}
+.ico_arrow_t_d:before {
+  content: '\e905';
+}
+.ico_arrow_t_u:before {
+  content: '\e906';
+}
+.ico_arrow_t_l:before {
+  content: '\e902';
+}
+.ico_arrow_t_r:before {
+  content: '\e903';
+}
+.ico_arrow_l:before {
+  content: '\e900';
+}
+.ico_list:before {
+  content: '\e901';
+}
+.ico_month:before {
+  content: '\e90a';
+}
+.ico_calendar:before {
+  content: '\e904';
+}
+.ico_refresh:before {
+  content: '\e909';
+}
+.ico_won:before {
+  content: '\e90b';
+}
+.ico_statement:before {
+  content: '\e90c';
+}
+.ico_nolist:before {
+  content: '\e918';
+}
+.ico_noalarm:before {
+  content: '\e90f';
+}
+.ico_add:before {
+  content: '\e910';
+}
+.ico_x:before {
+  content: '\e911';
+}
+.ico_check:before {
+  content: '\e912';
+}
+.ico_lock:before {
+  content: '\e913';
+}
+.ico_point:before {
+  content: '\e915';
+}
+.ico_search:before {
+  content: '\e916';
+}
+.ico_photo_blank:before {
+  content: '\e917';
+}
+.ico_file:before {
+  content: '\e919';
+}

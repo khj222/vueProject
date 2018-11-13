@@ -1,0 +1,62 @@
+<slide>
+  <!-- header -->
+  <header>
+    <div class="header" id="header">
+      <h1 class="tit_h">알림함</h1>
+      <div class="h_btns">
+        <!-- 상단 버튼영역 -->
+        <button class="btn_icon btn_prev" type="button" v-ripple v-close>
+          <i class="ico_arrow_l"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+  <!-- //header -->
+
+  <!-- container -->
+  <div class="container" id="container">
+
+    <!-- content -->
+    <div class="content ">
+      <!-- open list -->
+      <div class="open_list board_list scroll_cont" infinite-wrapper>
+        <spinner style="width: 15%;margin: 0 auto;height: 100%;" v-if="spin"></spinner>
+        <ul class="list">
+          <!-- 리스트 클릭 시 열림, 붙는 클래스 : open -->
+          <li class v-for="(item, key) in dataList" v-bind:class="{open: selectedId === key}">
+            <div class="inner" v-ripple @click="showDetail($event, key, item)">
+              <!-- <div class="txt_status">HR</div> -->
+              <div class="txt_open_list">
+                <ul class="list">
+                  <li class="tit">
+                    <strong>{{item.title}}</strong>
+                  </li>
+                  <li>{{item.PUSH_DATE}}</li>
+                </ul>
+              </div>
+            </div>
+            <!-- detail view -->
+            <div class="detail_view">
+              <div class="board_view">{{item.content}}</div>
+            </div>
+            <!-- //detail view -->
+          </li>
+          <infinite-loading @infinite="infiniteHandler" spinner="spiral" ref="infiniteLoading">
+            <span slot="no-more"></span>
+            <span slot="no-results"></span>
+          </infinite-loading>
+        </ul>
+      </div>
+      <!-- //open list -->
+      <!-- 알림 없을때 화면 -->
+      <div class="emp_cont" v-if="!spin && noResult" style="top: 0;">
+        <div class="txt_view">
+          <i class="ico_nolist"></i>
+          <p class="txt">알림함 내역이 없습니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- //content -->
+
+</slide>

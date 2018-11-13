@@ -1,0 +1,215 @@
+<slide>
+  <!-- header -->
+  <header>
+    <div id="header" class="header">
+      <h1 class="tit_h " @click="$store.state.popMenu && showBtn()" :class="{tit_btn : $store.state.popMenu}">초과근무 승인함
+        <i class="ico_arrow_t_d" v-if="$store.state.popMenu"></i>
+      </h1>
+
+      <div class="h_btns">
+        <!-- 상단 버튼영역 -->
+        <button type="button" v-ripple v-close class="btn_icon btn_prev">
+          <i class="ico_arrow_l"></i>
+        </button>
+        <div class="h_btns_r">
+          <button class="btn_icon btn_search" type="button" v-ripple @click="openSearch">
+            <i class="ico_search"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- //header -->
+
+  <!-- container -->
+  <div id="container" class="container ">
+    <!-- box -->
+    <div class="txt_box search_date_box">
+      <div class="tit_box">
+        <div class="tit_lb">신청일 조회</div>
+      </div>
+      <div class="search_date">
+        <label class="input_group" for="w1">
+          <!-- 버튼 누르면 캘린더 나오기 -->
+          <input id="w1" class="input_text" type="date" v-model="SEARCH_STA_DATE" @change="checkDate()" />
+          <div class="btn_icon">
+            <i class="ico_calendar"></i>
+          </div>
+        </label>
+        <span class="txt">~</span>
+        <label class="input_group" for="w2">
+          <!-- 버튼 누르면 캘린더 나오기 -->
+          <input id="w2" class="input_text" type="date" v-model="SEARCH_END_DATE" @change="checkDate()" />
+          <div class="btn_icon">
+            <i class="ico_calendar"></i>
+          </div>
+        </label>
+      </div>
+
+    </div>
+    <!-- //box -->
+
+    <!-- content -->
+    <div class="content ">
+      <!-- tab -->
+      <div class="cal_tab tab tab4" style="top:80px">
+        <input id="sortMngList1" name="sortMngList" type="radio" @change="filterList()" checked="checked" value="" v-model="SEARCH_APPL_CHK">
+        <label for="sortMngList1" v-ripple>전체</label>
+        <input id="sortMngList2" name="sortMngList" type="radio" @change="filterList()" value="Y" v-model="SEARCH_APPL_CHK">
+        <label for="sortMngList2" v-ripple>승인</label>
+        <input id="sortMngList3" name="sortMngList" type="radio" @change="filterList()" value="N" v-model="SEARCH_APPL_CHK">
+        <label for="sortMngList3" v-ripple>미승인</label>
+        <input id="sortMngList4" name="sortMngList" type="radio" @change="filterList()" value="C" v-model="SEARCH_APPL_CHK">
+        <label for="sortMngList4" v-ripple>반려</label>
+      </div>
+      <!-- //tab -->
+      <!-- tab content/고정 탭 컨텐츠 -->
+
+      <div class="tab_cont scroll_cont" infinite-wrapper>
+        <spinner style="width: 15%;margin: 0 auto;height: 100%;" v-if="spin"></spinner>
+        <!-- open list -->
+        <div class="open_list status_list">
+          <ul class="list">
+            <!-- 리스트 클릭 시 열림, 붙는 클래스 : open -->
+            <li class="" v-for="(item, key) in dataList" v-bind:class="{open: selectedId === key}">
+              <div class="inner" v-ripple @click="showDetail($event, key, item)">
+                <!-- <div class="txt_status">초과근무</div> -->
+                <div class="txt_mem_name">
+                  <strong class="name">{{item.TRG_EMP_NM}}</strong>
+                  <small class="num">{{item.TRG_EMP_NO}}</small>
+                </div>
+                <div class="txt_open_list">
+                  <ul class="list">
+                    <li>
+                      {{item.STA_YMD}} {{item.STA_HMS}} ~
+                      <br /> {{item.END_YMD}} {{item.END_HMS}}
+                    </li>
+
+                  </ul>
+                  <!-- badge sty01 : 오렌지색(요청) -->
+                  <div class="badge_r badge_sty01" v-if="item.APPL_STAT_NM === '결재요청'">요청</div>
+                  <div class="badge_r badge_sty02" v-if="item.APPL_STAT_NM === '결재중'">결재중</div>
+                  <div class="badge_r badge_sty03" v-if="item.APPL_STAT_NM === '반려'">반려</div>
+                  <div class="badge_r " v-if="item.APPL_STAT_NM === '승인완료' || item.APPL_STAT_NM === '승인' ">승인</div>
+                </div>
+              </div>
+              <!-- detail view -->
+              <div class="detail_view">
+                <div class="txt_box info_box">
+                  <div class="txt_list">
+                    <span class="tit">결재자</span>
+                    <ul class="name_list">
+                      <li v-for="it in detailData.resultList">{{it.APPR_EMP_NM}}</li>
+                    </ul>
+                  </div>
+                  <div class="txt_date">
+                    <span class="tit">신청일</span>
+                    <strong class="txt">{{item.REQ_YMD}}</strong>
+                  </div>
+                </div>
+                <div class="tbl_list02">
+                  <table class="tbl">
+                    <colgroup>
+                      <col style="width:43%" />
+                      <col />
+                    </colgroup>
+                    <tbody>
+                      <tr>
+                        <th>기준 근무 시간</th>
+                        <td>{{detailData.TAM_SHIFT_STA_HMS}} ~ {{detailData.TAM_SHIFT_END_HMS}}</td>
+                      </tr>
+                      <tr>
+                        <th>시작 일시</th>
+                        <td>
+                          <label class="input_group input_full" :for="'sw'+key">
+                            <!-- 버튼 누르면 캘린더 나오기 -->
+                            <input :id="'sw'+key" @change="checkChange()" class="input_text" type="date" v-model="item.STA_YMD" :disabled="isConfirmed(item)"
+                            />
+                            <div class="btn_icon">
+                              <i class="ico_calendar"></i>
+                            </div>
+                          </label>
+                          <label class="select_box" :for="'sew'+key">
+                            <select class="select" @change="checkChange()" v-model="item.STA_HMS" :id="'sew'+key" :disabled="isConfirmed(item)">
+                              <option v-for="i in times" :value="i">{{i}}</option>
+                            </select>
+                          </label>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>종료 일시</th>
+                        <td>
+                          <label class="input_group input_full" :for="'rw'+key">
+                            <!-- 버튼 누르면 캘린더 나오기 -->
+                            <input :id="'rw'+key" @change="checkChange()" class="input_text" type="date" v-model="item.END_YMD" :disabled="isConfirmed(item)"
+                            />
+                            <div class="btn_icon">
+                              <i class="ico_calendar"></i>
+                            </div>
+                          </label>
+                          <div class="select_box">
+                            <select class="select" @change="checkChange()" v-model="item.END_HMS" :disabled="isConfirmed(item)">
+                              <option v-for="i in times" :value="i">{{i}}</option>
+                            </select>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>초과근무 제외시간</th>
+                        <td>
+                          <div class="select_box">
+                            <select id="w3" @change="checkChange()" :disabled="isConfirmed(item)" class="select " name="EXPT_HMS" v-model="detailData.EXPT_HMS"
+                              required="required">
+                              <option value="0" selected="selected">0시간</option>
+                              <option value="1">1시간</option>
+                              <option value="2">2시간</option>
+                              <option value="3">3시간</option>
+                              <option value="4">4시간</option>
+                              <option value="5">5시간</option>
+                            </select>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr v-if="detailData.req_hms_cnt !== '' ">
+                        <th>초과근무 잔여시간</th>
+                        <td>
+                          <span class="point_col3">{{12-parseInt(detailData.req_hms_cnt)}}</span> / 12</td>
+                      </tr>
+
+                      <!-- <tr>
+                        <th>근무 유형</th>
+                        <td>휴일 정상</td>
+                      </tr> -->
+                      <tr>
+                        <th>근무 내역</th>
+                        <td>{{item.REASON}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <!-- 오픈리스트의 버튼 / 2개이상이면 btns -->
+                <div class="list_view_btn btns" v-if="!isConfirmed(item)">
+                  <button type="button" class="btn btn_l btn_sty05" v-ripple @click="reject(item)">반려</button>
+                  <button type="button" class="btn btn_l btn_sty04" v-ripple @click="approve(item)">승인</button>
+                </div>
+              </div>
+            </li>
+            <infinite-loading @infinite="infiniteHandler" spinner="spiral" ref="infiniteLoading">
+              <span slot="no-more"></span>
+              <span slot="no-results"></span>
+            </infinite-loading>
+          </ul>
+        </div>
+        <!-- //open list -->
+      </div>
+      <!-- 알림 없을때 화면 -->
+      <div class="emp_cont list" v-if="!spin && noResult">
+        <div class="txt_view">
+          <i class="ico_nolist"></i>
+          <p class="txt">초과근무 승인함 내역이 없습니다.</p>
+        </div>
+      </div>
+    </div>
+    <!-- //content -->
+  </div>
+</slide>

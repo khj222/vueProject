@@ -1,0 +1,29 @@
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .2s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 9999;
+  backface-visibility: hidden;
+}
+
+#wrap {
+  position: absolute;
+  top: 0;
+  background: #dee2ed;
+  z-index: 9999;
+  will-change: opacity;
+}
+
+.fade-enter {
+  opacity: 0;
+}
+
+.fade-enter-to {
+  opacity: 1;
+}
+
+.fade-leave {
+  opacity: 1;
+}
+
+.fade-leave-to {
+  opacity: 0;
+}

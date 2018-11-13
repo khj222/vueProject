@@ -1,0 +1,228 @@
+<slide>
+  <!-- header -->
+  <header>
+    <div id="header" class="header">
+      <h1 class="tit_h" @click="$store.state.popMenu && showBtn()" :class="{tit_btn : $store.state.popMenu}">교육 신청함
+        <i class="ico_arrow_t_d" v-if="$store.state.popMenu"></i>
+      </h1>
+      <div class="h_btns">
+        <!-- 상단 버튼영역 -->
+        <button type="button" v-ripple v-close class="btn_icon btn_prev">
+          <i class="ico_arrow_l"></i>
+        </button>
+        <div class="h_btns_r">
+          <button class="btn_icon btn_search" type="button" v-ripple @click="showSearch">
+            <i class="ico_search"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- //header -->
+
+  <!-- container -->
+  <div id="container" class="container">
+    <!-- content -->
+    <div class="content scroll_cont" infinite-wrapper>
+      <spinner style="width: 15%;margin: 0 auto;height: 100%;" v-if="spin"></spinner>
+      <!-- open list -->
+      <div class="open_list status_list ">
+        <ul class="list ">
+          <li v-for="(item, key) in dataList" :class="{open: selectedId === key}">
+            <div class="inner" v-ripple @click="showDetail($event, key, item)">
+              <!-- <div class="txt_status">필수과정</div> -->
+              <div class="txt_open_list">
+                <strong class="tit">{{item.COSE_NM}}–{{item.COSE_OPEN_CHA}}</strong>
+                <ul class="list">
+                  <li>{{item.APP_DATE}}</li>
+                </ul>
+                <!-- badge sty01 : 오렌지색(요청) -->
+                <div class="badge_r badge_sty01" v-if="item.APP_STAT_CD==='100'">요청</div>
+                <!-- badge sty04 : 갈색(승인중) /임시 -->
+                <div class="badge_r badge_sty04" v-else-if="item.APP_STAT_CD==='200'">결재중</div>
+                <div class="badge_r badge_sty04" v-else-if="item.APP_STAT_CD==='300'">승인중</div>
+                <!-- badge sty03 : 빨강색(반려) -->
+                <div class="badge_r badge_sty03" v-else-if="item.APP_STAT_CD==='400'">반려</div>
+                <!-- 기본(완료) -->
+                <div class="badge_r" v-else-if="item.APP_STAT_CD==='500'">완료</div>
+              </div>
+            </div>
+            <!-- detail view/초과근무 -->
+            <div class="detail_view">
+              <div class="txt_box info_box">
+                <div class="txt_list">
+                  <ul class="name_list fl">
+                    <li>
+                      <span class="tit">결재자</span>
+                      <strong class="txt_name">{{coseInCoseData.APPR_EMP_NM1}}</strong>
+                    </li>
+                    <li>
+                      <span class="tit">승인</span>
+                      <strong class="txt_name">{{coseInCoseData.APPR_EMP_NM2}}</strong>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="tbl_list02">
+                <table class="tbl">
+                  <colgroup>
+                    <col style="width:28%" />
+                    <col />
+                  </colgroup>
+                  <tbody>
+                    <tr>
+                      <th>선택/필수</th>
+                      <td>{{coseInCoseData.ESS_OPT_NM_2}} 과정</td>
+                    </tr>
+                    <tr>
+                      <th>학점</th>
+                      <td>{{coseInCoseData.COSE_MARKS}}학점</td>
+                    </tr>
+                    <tr>
+                      <th>교육 종류</th>
+                      <td>{{coseInCoseData.EDU_KIND_NM}}</td>
+                    </tr>
+                    <tr>
+                      <th>교육 수준</th>
+                      <td>{{coseInCoseData.EDU_LVL_NM}}</td>
+                    </tr>
+                    <tr>
+                      <th>교육 대상</th>
+                      <td>{{coseInCoseData.EDU_TUTE}}</td>
+                    </tr>
+                    <tr>
+                      <th>평가 기준</th>
+                      <td>{{coseInCoseData.EVAL_STANDARD}}</td>
+                    </tr>
+                    <tr>
+                      <th>교육 차수</th>
+                      <td class="point_col3">{{coseInCoseData.COSE_OPEN_CHA}}</td>
+                    </tr>
+                    <tr>
+                      <th>교육 기간</th>
+                      <td>{{coseInCoseData.EDU_DATE}}</td>
+                    </tr>
+                    <tr>
+                      <th>교육 장소</th>
+                      <td>{{coseInCoseData.EDU_PLAC_FULL_NM}}</td>
+                    </tr>
+                    <tr>
+                      <th>교육 강사</th>
+                      <td>{{coseInCoseData.EDU_TEACHER_NM}}</td>
+                    </tr>
+                    <tr>
+                      <th>교육 목적</th>
+                      <td>{{coseInCoseData.EDU_OBJE}}</td>
+                    </tr>
+                    <tr>
+                      <th>교육 내용</th>
+                      <td v-html="coseInCoseData.EDU_NOTE"></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="tbl_list02">
+                <strong class="tit">사전학습 자료</strong>
+                <download :file="file" class="add_file_box" v-for="file in fileList" v-ripple>
+                  <i class="ico_file"></i>
+                  <span>{{file.FILE_NM_ORG}}</span>
+                </download>
+              </div>
+              <div class="tbl_list02">
+                <table class="tbl">
+                  <colgroup>
+                    <col style="width:28%" />
+                    <col />
+                  </colgroup>
+                  <tbody>
+                    <tr>
+                      <th>신청 상태</th>
+                      <td>{{item.APP_STAT_NM}}</td>
+                    </tr>
+                    <tr>
+                      <th>승인/반려일</th>
+                      <td>{{item.APPR_P_DATE || item.APPR_F_DATE}}</td>
+                    </tr>
+                    <tr>
+                      <th>승인/반려자</th>
+                      <td>{{item.APPR_P_EMP_NM || item.APPR_F_EMP_NM}}</td>
+                    </tr>
+                    <tr>
+                      <th>반려사유</th>
+                      <td>{{item.REJ_NOTE}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!-- 오픈리스트의 버튼 / 2개이상이면 btns -->
+              <div class="list_view_btn" v-if="item.APP_STAT_CD <= 300">
+                <button v-if="coseInCoseData.goCancel === 1" type="button" class="btn btn_l btn_sty05" v-ripple @click="saveEduCoseOpenApplCancel(item, coseInCoseData)">교육신청 취소</button>
+              </div>
+            </div>
+          </li>
+          <infinite-loading @infinite="infiniteHandler" spinner="spiral" ref="infiniteLoading">
+            <span slot="no-more"></span>
+            <span slot="no-results"></span>
+          </infinite-loading>
+        </ul>
+      </div>
+      <!-- //open list -->
+    </div>
+    <!-- //content -->
+  </div>
+  <!-- 알림 없을때 화면 -->
+  <div class="emp_cont" v-if="!spin && noResult">
+    <div class="txt_view">
+      <i class="ico_nolist"></i>
+      <p class="txt">교육 신청 이력이 없습니다.</p>
+    </div>
+  </div>
+  </div>
+  <!-- 검색 버튼 클릭시 나오는 검색영역, 붙는 클래스 : on / 이 영역이 나올때 뒤에 스크롤 안되게 해주세요. -->
+  <div class="search_wrap " :class="{on:isSearch}">
+    <!-- search_box -->
+    <div class="search_box ">
+      <ul class="list ">
+        <li>
+          <div class="tit_list ">
+            <label for="w1 " class="tit_lb ">교육년도</label>
+          </div>
+          <div class="select_group ">
+            <label class="input_group" for="w1">
+              <select class="select tute" v-model="SEARCH_STA_YYYY">
+                <option value="" disabled>년도 선택</option>
+                <option :value="y" v-for="y in yearList">{{y}}</option>
+              </select>
+              <div class="btn_icon">
+                <i class="ico_calendar"></i>
+              </div>
+            </label>
+            <span class="txt">~</span>
+            <label class="input_group" for="w2">
+              <select class="select tute" v-model="SEARCH_END_YYYY">
+                <option value="" disabled>년도 선택</option>
+                <option :value="y" v-for="y in yearList">{{y}}</option>
+              </select>
+              <div class="btn_icon">
+                <i class="ico_calendar"></i>
+              </div>
+            </label>
+          </div>
+        </li>
+        <li>
+          <div class="tit_list ">
+            <strong class="tit_lb ">과정명</strong>
+          </div>
+          <input type="text " v-model="SEARCH_COSE_NM" class="input_text input_full " value="과정명 " placeholder="과정명을 입력하세요. " />
+        </li>
+      </ul>
+      <button type="button" class="btn btn_sty01 btn_l btn_search_m " v-ripple @click="search">조회</button>
+    </div>
+    <!-- //write_list -->
+    <!-- 닫기 버튼 -->
+    <button type="button " class="btn_close " v-ripple @click="hideSearch()">
+      <i class="ico_x "></i>
+    </button>
+  </div>
+
+</slide>

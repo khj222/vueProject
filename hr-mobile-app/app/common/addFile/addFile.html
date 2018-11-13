@@ -1,0 +1,10 @@
+<div>
+  <ul-flip class="add_file_img">
+    <li v-for="item of attached.images" :key="item.file_id" class="file_img"><download :file="item"><img :src="item.file_id|fileUrl"></download><button type="button" class="btn_delete" v-if="edit" @click.stop.prevent="$emit('remove',item)"><i class="ico_close"></i></button></li>
+  </ul-flip>
+  <ul-flip class="add_file">
+    <li v-for="item of attached.files" :key="item.file_id">
+      <download :file="item"><span class="ico_txt ico_f_file"><span class="blind">File</span></span>{{item.file_name}}<button type="button" class="btn_delete" v-if="edit" @click.stop.prevent="$emit('remove',item)"><i class="ico_close"></i></button></download>
+    </li>
+  </ul-flip>
+</div>

@@ -1,0 +1,140 @@
+<slide>
+  <!-- header -->
+  <header>
+    <div class="header" id="header">
+      <h1 class="tit_h">급여 계좌 변경 신청</h1>
+      <div class="h_btns">
+        <!-- 상단 버튼영역 -->
+        <button class="btn_icon btn_prev" type="button" v-close v-ripple>
+          <i class="ico_arrow_l"></i>
+        </button>
+        <div class="h_btns_r">
+          <button class="btn_icon btn_box" type="button" v-ripple @click="openRequestList">
+            <i class="ico_list"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- //header -->
+
+  <!-- container -->
+  <div class="container" id="container">
+
+
+    <!-- content -->
+    <div class="content">
+
+      <form @submit.prevent="applyChangeAccount" action>
+        <!-- btn content/하단 버튼 고정 컨텐츠   -->
+        <div class="btn_cont scroll_cont">
+          <!-- detail view -->
+          <div class="detail_view">
+            <div class="tbl_list02">
+              <table class="tbl">
+                <caption class="tit_tbl">변경 전</caption>
+                <colgroup>
+                  <col style="width:43%">
+                  <col>
+                </colgroup>
+                <tbody>
+                  <tr>
+                    <th>작성자 / 작성부서</th>
+                    <td>{{bankInfo.EMP_NM}} / {{bankInfo.ORG_NM}}</td>
+                  </tr>
+                  <tr>
+                    <th>기존 은행</th>
+                    <td>{{bankInfo.EMP_BANK_NM}}</td>
+                  </tr>
+                  <tr>
+                    <th>기존 계좌번호(-제외)</th>
+                    <td>{{bankInfo.EMP_ACC_NO}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- //detail view -->
+          <!-- app_list -->
+          <div class="app_list">
+            <strong class="tit_all_list">변경 요청 정보</strong>
+            <ul class="list">
+              <li>
+                <div class="tit_list">
+                  <label class="tit_lb" for="w1">은행 구분</label>
+                </div>
+                <div class="select_box">
+                  <select class="select" id="w1" v-model="BANK_CD" required oninvalid="this.setCustomValidity('은행 구분을 선택해 주세요.')" oninput="this.setCustomValidity('')">
+                    <option value="">선택</option>
+                    <option v-for="it in PCM_BANK_LIST" :value="it.value">{{it.text}}</option>
+                    <!-- <option value="002">산업</option>
+                    <option value="003">기업</option>
+                    <option value="004">국민</option>
+                    <option value="005">외환</option>
+                    <option value="011">농협</option>
+                    <option value="012">단농</option>
+                    <option value="020">우리</option>
+                    <option value="021">조흥</option>
+                    <option value="023">SC제일</option>
+                    <option value="026">신한(구)</option>
+                    <option value="027">한국씨티</option>
+                    <option value="031">대구</option>
+                    <option value="032">부산</option>
+                    <option value="034">광주</option>
+                    <option value="035">제주</option>
+                    <option value="037">전북</option>
+                    <option value="039">경남</option>
+                    <option value="045">새마을금고</option>
+                    <option value="048">신협</option>
+                    <option value="050">상호저축은행</option>
+                    <option value="053">한국씨티(구)</option>
+                    <option value="071">우체국</option>
+                    <option value="081">KEB하나</option>
+                    <option value="088">신한</option>
+                    <option value="089">케이뱅크</option>
+                    <option value="090">카카오뱅크</option> -->
+                  </select>
+                </div>
+              </li>
+              <li>
+                <div class="tit_list">
+                  <label class="tit_lb" for="w2">계좌 번호 (-제외)</label>
+                </div>
+                <input class="input_text input_full" id="w3" type="number" required v-model="ACC_NO" oninvalid="this.setCustomValidity('계좌번호를 입력해 주세요.')"
+                  oninput="this.setCustomValidity('')">
+              </li>
+              <li>
+                <div class="tit_list">
+                  <strong class="tit_lb">통장 사본</strong>
+                </div>
+                <div class="ct_add_file">
+                  <label class="btn btn_s btn_sty02 btn_add" for="addFile">
+                    <i class="ico_add"></i> 첨부
+                    <input class="input_file" id="addFile" name="addFile" type="file" ref="addFile" @change="putFile($event)" required oninvalid="this.setCustomValidity('통장사본 파일을 첨부해 주세요.')"
+                      onchange="this.setCustomValidity('')" accept="image/*">
+                  </label>
+                  <div class="file_box">
+                    <span class="file_name">{{fileName}}
+                      <span v-if="fileName !== ''">({{fileSize}} KB)</span>
+                      <button class="btn_delete" type="button" @click="clearFile">
+                        <i class="ico_x"></i>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+                <em class="txt_warning">※ 매월 21~25일은 변경신청 불가, 26일 이후 신청분 익월 반영</em>
+              </li>
+            </ul>
+          </div>
+          <!-- //write_list -->
+        </div>
+        <!-- list btn -->
+        <div class="btm_btns">
+          <button class="btn btn_sty01" type="submit" v-ripple>급여 계좌 변경 신청</button>
+        </div>
+        <!-- //list btn -->
+      </form>
+    </div>
+    <!-- //content -->
+  </div>
+</slide>

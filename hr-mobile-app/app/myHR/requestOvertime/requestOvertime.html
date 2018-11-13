@@ -1,0 +1,216 @@
+<slide>
+  <!-- header -->
+  <header>
+    <div id="header" class="header">
+      <h1 class="tit_h">초과 근무 신청</h1>
+      <div class="h_btns">
+        <!-- 상단 버튼영역 -->
+        <button type="button" v-ripple v-close class="btn_icon btn_prev">
+          <i class="ico_arrow_l"></i>
+        </button>
+        <div class="h_btns_r">
+          <button type="button" class="btn_icon btn_box" v-ripple @click="openRequestList">
+            <i class="ico_list"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- //header -->
+
+  <!-- container -->
+  <div id="container" class="container ">
+    <!-- info box -->
+    <div class="txt_box info_box">
+      <div class="txt_list">
+        <span class="tit">결재자</span>
+        <ul class="name_list">
+          <li>{{APPR_EMP1.EMP_NM}}</li>
+          <li>{{APPR_EMP2.EMP_NM}}</li>
+        </ul>
+        <label class="btn btn_sty02 btn_xs appr_select" for="name1" v-if="pl_list_j.length > 0">변경
+          <select class="btn btn_sty02 btn_xs" v-model="APPR_EMP1" id="name1">
+            <option v-for="item in pl_list_j" :value="item">{{item.EMP_NM}}</option>
+          </select>
+        </label>
+      </div>
+      <div class="txt_date">
+        <span class="tit">신청일</span>
+        <strong class="txt">{{FORMATED_YMD}}</strong>
+      </div>
+    </div>
+    <!-- //box -->
+
+    <!-- content -->
+    <div class="content " style="overflow: hidden;-webkit-overflow-scrolling: touch;">
+      <!-- btn content/하단 버튼 고정 컨텐츠   -->
+      <form @submit.prevent="applyOvertime" action="">
+        <div class="btn_cont scroll_cont">
+          <!-- write_list -->
+          <div class="write_list">
+            <ul class="list">
+              <li>
+                <div class="tit_list">
+                  <label for="w1" class="tit_lb">시작 일시
+                    <span class="tam_shift_time">기준근무시간 {{TAM_SHIFT_STA_HMS}} ~ {{TAM_SHIFT_END_HMS}}</span>
+                  </label>
+                </div>
+                <div class="select_group">
+                  <div class="input_group">
+                    <!-- 버튼 누르면 캘린더 나오기 -->
+                    <!-- <input-date title="시작 기간" class="input_text inp" placeholder="날짜선택" v-model="filter.beginDate" ref="beginDate" id="beginDate"
+                  /> -->
+                    <input type="date" oninvalid="this.setCustomValidity('시작 일자를 선택해 주세요.')" oninput="this.setCustomValidity('')" name="STA_YMD"
+                      id="STA_YMD" v-model="STA_YMD" class="input_text" required="required" @change="checkDateHoliDay($event)">
+                    <!-- <input id="w1" class="input_text" type="text" readonly="readonly" /> -->
+                    <label for="STA_YMD" class="ico_calendar btn_icon"></label>
+                    <!-- <button class="btn_icon" type="button"><i class="ico_calendar"></i></button> -->
+                  </div>
+                  <div class="select_box">
+                    <!-- <input type="text" maxlength="2" name="STA_HH" id="STA_HH" @input="STA_HH = $event.target.valueAsDate"  class="input_text"> -->
+                    <label for="STA_TIME"></label>
+
+                    <select oninvalid="this.setCustomValidity('시작 시간을 선택해 주세요.')" oninput="this.setCustomValidity('')" class="select" nane="STA_TIME"
+                      v-model="STA_TIME" style="height:34px" required="required">
+                      <option v-for="i in times" :value="i">{{i}}</option>
+                    </select>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="tit_list">
+                  <label for="w2" class="tit_lb">종료 일시</label>
+                </div>
+                <div class="select_group">
+                  <div class="input_group">
+                    <!-- 버튼 누르면 캘린더 나오기 -->
+                    <input oninvalid="this.setCustomValidity('종료 일자를 선택해 주세요.')" oninput="this.setCustomValidity('')" type="date" name="END_YMD"
+                      id="END_YMD" v-model="END_YMD" class="input_text" required="required" @change="checkHoliDay($event)">
+                    <!-- <input-date title="종료 기간" class="input_text inp" placeholder="날짜선택" type="text" v-model="filter.endDate" ref="endDate" id="endDate"
+                  /> -->
+                    <!-- <input id="w2" class="input_text" type="text" readonly="readonly" /> -->
+                    <label for="END_YMD" class="ico_calendar btn_icon"></label>
+                    <!-- <button class="btn_icon" type="button"><i class="ico_calendar"></i></button> -->
+                  </div>
+                  <div class="select_box">
+                    <select oninvalid="this.setCustomValidity('종료 시간을 선택해 주세요.')" oninput="this.setCustomValidity('')" class="select" nane="END_TIME"
+                      v-model="END_TIME" style="height:34px" required="required">
+                      <option v-for="i in times" :value="i">{{i}}</option>
+                    </select>
+                    <!-- <input type="time" name="END_HH" id="END_HH" @input="END_HH = $event.target.valueAsDate" class="input_text"> -->
+                    <label for="END_TIME"></label>
+
+                    <!-- <select class="select">
+                    <option value="">00:00</option>
+                    <option value="">00:30</option>
+                    <option value="">01:00</option>
+                    <option value="">01:30</option>
+                    <option value="">02:00</option>
+                    <option value="">02:30</option>
+                    <option value="">03:00</option>
+                  </select> -->
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="tit_list">
+                  <label for="w3" class="tit_lb">초과 근무 제외시간</label>
+                </div>
+                <div class="select_box">
+                  <select id="w3" oninvalid="this.setCustomValidity('초과 근무 제외시간을 선택해 주세요.')" oninput="this.setCustomValidity('')" class="select input_full"
+                    name="EXPT_HMS" v-model="EXPT_HMS" required="required">
+                    <option value="0" selected="selected">0시간</option>
+                    <option value="1">1시간</option>
+                    <option value="2">2시간</option>
+                    <option value="3">3시간</option>
+                    <option value="4">4시간</option>
+                    <option value="5">5시간</option>
+                  </select>
+                </div>
+              </li>
+              <li style="display: none">
+                <div class="tit_list">
+                  <strong class="tit_lb">근무 유형</strong>
+                </div>
+                <input type="text" class="input_text input_full" :value="calcWorkType" disabled="disabled" />
+              </li>
+              <li>
+                <div class="tit_list">
+                  <label for="w4" class="tit_lb">근무 내역</label>
+                  <button type="button" class="btn_txt btn_xs btn_txt_sty01 btn_refresh" v-ripple @click="REASON = null">
+                    <i class="ico_refresh"></i>내용 초기화</button>
+                </div>
+                <textarea id="w4" class="textarea" rows="3" @input="focusScroll($event)" @change="focusScroll($event)" @click="focusScroll($event)"
+                  @focus="focusScroll($event)" oninvalid="this.setCustomValidity('초과 근무 사유를 입력하세요.')" oninput="this.setCustomValidity('')"
+                  placeholder="초과 근무 사유를 입력하세요." name="REASON" v-model="REASON" required="required"></textarea>
+              </li>
+              <!-- <li>
+                <div class="tit_list">
+                  <strong class="tit_lb">초과 근무 잔여 시간</strong>
+                </div>
+                <div class="tbl_row">
+                  <table class="tbl">
+                    <colgroup>
+                      <col style="width:22%;">
+                      <col style="width:26%;">
+                      <col style="width:26%;">
+                      <col style="width:26%;">
+                    </colgroup>
+                    <tbody>
+                      <tr>
+                        <th class="tc">{{getThisYear}}년 {{getThisWeek}}주차</th>
+                        <td>전체
+                          <strong>12</strong>
+                        </td>
+                        <td>사용
+                          <strong class="point_col3">10</strong>
+                        </td>
+                        <td>잔여
+                          <strong class="point_col3">2</strong>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </li> -->
+              <!-- 그래프표시/미적용 -->
+              <li class="graph" v-if="overtimeDate.req_hms_cnt !== '' " v-cloak>
+                <div class="tit_list">
+                  <strong class="tit_lb">초과 근무 사용 시간</strong>
+                  <span class="txt">{{getThisYear}}년 {{getThisWeek}}주차</span>
+                </div>
+                <div class="progress_view">
+                  <div class="progress">
+                    <!-- 12시간 기본 : bar1 ~ bar12까지 초과시간에 맞게 클래스 적용 -->
+                    <div class="progress_bar " :style="{width:barWidth}">
+                      <div class="txt_bar">
+                        <div class="inner">
+                          <span class="txt txt_0" v-if="!(overtimeDate.req_hms_cnt > 0 && overtimeDate.req_hms_cnt < 1)">0</span>
+                          <span v-if="overtimeDate.req_hms_cnt > 0 && overtimeDate.req_hms_cnt <= 12" class="txt txt_view" :style="{left:barWidth}">{{overtimeDate.req_hms_cnt}}</span>
+                          <!-- 움직인 바의 텍스트/ .bar*의 숫자와 동일하게 넣어주세요. -->
+                          <span class="txt txt_12" v-if="overtimeDate.req_hms_cnt < 11">12</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="mt25"></div>
+                <em class="txt_warning b" v-for="it in noti" v-if="noti.length>0">※ {{it}}</em>
+              </li>
+            </ul>
+          </div>
+          <!-- //write_list -->
+
+        </div>
+        <!-- list btn -->
+        <div class="btm_btns">
+          <button class="btn btn_sty01" type="submit" v-ripple>신청하기</button>
+        </div>
+        <!-- //list btn -->
+      </form>
+    </div>
+    <!-- //content -->
+
+  </div>
+</slide>

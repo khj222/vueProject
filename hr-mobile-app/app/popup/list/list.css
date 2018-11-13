@@ -1,0 +1,84 @@
+.pop_title {
+  padding: 10px 0 0 10px;
+  text-align: left;
+}
+
+.pop_cont {
+  max-height: 70vh;
+  overflow: auto;
+}
+
+.popup.mini {
+  /* left: 10%;
+  right: 10%;
+  top: 50%;
+  transform: translateY(-50%); */
+}
+.popup_layer {
+  z-index: 10000;
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+.popup .pl_cont {
+  padding-top: 23px;
+  padding-bottom: 25px;
+
+  margin: 0 8vw;
+  font-size: 1.15em;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.db {
+  border-bottom: solid 1px #d7d7d7;
+
+  padding: 13px 0;
+  margin: 0 !important;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-items: space-between;
+}
+.db:last-child {
+  border-bottom: none;
+}
+.pl_list {
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  border-top: solid 1px #d7d7d7;
+  border-bottom: solid 1px #d7d7d7;
+  margin: 0 8vw;
+  margin-bottom: 30px;
+  max-height: 43vh;
+}
+
+.db > span {
+  flex: 1;
+  text-align: left;
+  padding-left: 5vw;
+}
+.db > i {
+  margin-right: 5vw !important;
+  display: flex !important;
+  align-items: center;
+  justify-items: center;
+}
+.popup.mini {
+  width: 80% !important;
+  margin-left: 7%;
+}
+
+.popup .pl_head {
+  height: 50px;
+  line-height: 50px;
+}
+
+.popup .pl_btns .btn {
+  height: 50px;
+  line-height: 50px;
+}

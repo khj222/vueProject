@@ -1,0 +1,10 @@
+#wrap {
+  transition: transform .35s ease-in-out;
+  backface-visibility: hidden;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+
+#wrap.slide {
+  transform: translate3d(-15%, 0, 0);
+}

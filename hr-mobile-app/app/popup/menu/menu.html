@@ -1,0 +1,10 @@
+<fade-popup>
+  <div class="h_menu">
+    <ul class="menu_list">
+      <li v-for="item in $store.state.ROLE.new" v-if="checkMenu(item)">
+        <a href="javascript:void(0)" class="btn" v-ripple @click="open(item.id)">{{item.title}}</a>
+      </li>
+    </ul>
+    <button type="button" class="btn btn_cancel" v-ripple @click="hideMenu()">취소</button>
+  </div>
+</fade-popup>
